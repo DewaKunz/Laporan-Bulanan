@@ -410,13 +410,13 @@ class RealtimeSyncEngine {
     if (!badge) return;
 
     if (this.isMqttConnected || this.isPeerConnected) {
-      badge.innerHTML = '⚡ <span>Realtime Aktif (0 Jeda)</span>';
-      badge.className = 'sync-badge sync-p2p';
-      badge.title = 'Terhubung langsung realtime tanpa jeda (MQTT/WebRTC)! Klik untuk tes sinkronisasi.';
+      badge.innerHTML = '<span class="sync-pulse-dot"></span> <span>Realtime</span>';
+      badge.className = 'sync-pill is-online';
+      badge.title = '⚡ Terhubung realtime tanpa jeda! Klik untuk sinkron ulang.';
     } else {
-      badge.innerHTML = '🟢 <span>Tersambung (Cloud Sync)</span>';
-      badge.className = 'sync-badge sync-online';
-      badge.title = 'Terhubung ke server cloud. Klik untuk tes sinkronisasi langsung.';
+      badge.innerHTML = '<span class="sync-pulse-dot" style="background:#10b981;"></span> <span>Cloud</span>';
+      badge.className = 'sync-pill is-online';
+      badge.title = '🟢 Terhubung server cloud. Klik untuk tes sinkronisasi.';
     }
   }
 }

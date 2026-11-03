@@ -117,7 +117,7 @@ class CalendarView {
       const dayEvents = scheduleByDate[dateStr] || [];
 
       let eventsHtml = '';
-      dayEvents.slice(0, 3).forEach(ev => {
+      dayEvents.slice(0, 2).forEach(ev => {
         let badgeClass = 'event-bareng';
         let prefix = '💜';
         if (ev.person === 'dewa') {
@@ -127,17 +127,18 @@ class CalendarView {
           badgeClass = 'event-ayu';
           prefix = '💖';
         }
+        const timeStr = ev.time ? `${ev.time.substring(0, 5)} ` : '';
         eventsHtml += `
-          <div class="calendar-event-pill ${badgeClass}" title="${ev.time || ''} ${ev.title}">
-            ${prefix} ${ev.time ? ev.time.substring(0, 5) : ''} ${ev.title}
+          <div class="calendar-event-pill ${badgeClass}" title="${timeStr}${ev.title}">
+            ${prefix} ${timeStr}${ev.title}
           </div>
         `;
       });
 
-      if (dayEvents.length > 3) {
+      if (dayEvents.length > 2) {
         eventsHtml += `
-          <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 700; padding-left: 2px;">
-            +${dayEvents.length - 3} lainnya
+          <div style="font-size: 0.65rem; color: var(--text-muted); font-weight: 800; padding-left: 2px;">
+            +${dayEvents.length - 2} lagi
           </div>
         `;
       }

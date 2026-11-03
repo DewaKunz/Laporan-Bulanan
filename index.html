@@ -24,53 +24,32 @@
       </div>
 
       <div class="header-actions">
-        <!-- User Account Pill & Switcher (Dewa 🐻 / Ayu 🐰) -->
-        <button id="user-header-profile" class="user-account-pill" title="Profil akun aktif - Klik untuk ganti profil">
+        <!-- User Account Pill (Dewa 🐻 / Ayu 🐰) -->
+        <button id="user-header-profile" class="user-account-pill" title="Ganti Profil Dewa & Ayu">
           <span id="user-pill-avatar" style="font-size: 1.15rem;">👤</span>
           <span id="user-pill-name">Pilih Akun</span>
         </button>
 
-        <!-- Sync Status Indicator (Laptop & HP Live Sync) -->
-        <div id="sync-status-indicator" class="sync-badge sync-offline" title="Memeriksa sinkronisasi...">
-          📡 <span>Mode Offline</span>
+        <!-- Minimalist Realtime Sync Indicator -->
+        <div id="sync-status-indicator" class="sync-pill" title="Status Realtime - Klik untuk sinkron ulang">
+          <span class="sync-pulse-dot"></span>
+          <span id="sync-status-text">Realtime</span>
         </div>
-
-        <!-- Mobile QR Access Button (Same Wi-Fi) -->
-        <button class="btn btn-primary btn-sm" id="btn-mobile-access" title="Scan QR Code untuk akses langsung di HP Pasangan">
-          📱 Buka di HP
-        </button>
-
-        <!-- Remote Access Guide Button (Different Wi-Fi / Long Distance) -->
-        <button class="btn btn-secondary btn-sm" id="btn-remote-access" title="Cara menghubungkan HP & Laptop jika berada di beda Wi-Fi atau jarak jauh">
-          🌐 Akses Jarak Jauh
-        </button>
 
         <!-- Month Picker -->
         <div class="month-selector">
-          <span style="font-size: 1rem;">🗓️</span>
+          <span style="font-size: 0.95rem;">🗓️</span>
           <select id="month-select" aria-label="Pilih Periode Bulan">
             <!-- Dynamically populated -->
           </select>
         </div>
 
-        <!-- Print / PDF -->
-        <button class="btn btn-secondary btn-sm" id="btn-print-report" title="Cetak Laporan Manis ke PDF">
-          🖨️ Cetak
-        </button>
-
-        <!-- Export / Import -->
-        <button class="btn btn-secondary btn-sm" id="btn-export-data" title="Download backup data JSON">
-          💾 Backup
-        </button>
-        <button class="btn btn-secondary btn-sm" id="btn-import-trigger" title="Upload restore data JSON">
-          📂 Impor
-        </button>
+        <!-- Sleek Icon Actions: Backup, Restore, Print, Theme -->
+        <button class="btn-icon" id="btn-export-data" title="Backup Data JSON">💾</button>
+        <button class="btn-icon" id="btn-import-trigger" title="Upload Restore Data JSON">📂</button>
         <input type="file" id="import-file-input" accept=".json" style="display: none;">
-
-        <!-- Theme Toggle -->
-        <button class="btn-icon" id="theme-toggle-btn" title="Ganti Tema Lucu (Siang Strawberry / Malam Bintang)">
-          🌙
-        </button>
+        <button class="btn-icon" id="btn-print-report" title="Cetak / PDF">🖨️</button>
+        <button class="btn-icon" id="theme-toggle-btn" title="Ganti Mode Gelap / Terang">🌙</button>
       </div>
     </div>
   </header>
@@ -84,10 +63,33 @@
       <span>✨</span>
     </div>
 
+    <!-- Quick Input Bar on Dashboard -->
+    <div class="quick-input-bar">
+      <span class="quick-input-title">⚡ Input Cepat:</span>
+      <button class="btn btn-sm btn-quick-income" onclick="window.openModal('modal-add-income');">
+        💵 + Rezeki
+      </button>
+      <button class="btn btn-sm btn-quick-expense" onclick="window.openModal('modal-add-expense');">
+        🛍️ + Belanja
+      </button>
+      <button class="btn btn-sm btn-quick-schedule" onclick="window.openModal('modal-add-schedule');">
+        📅 + Jadwal
+      </button>
+      <button class="btn btn-sm btn-quick-todo" onclick="window.openModal('modal-add-todo');">
+        🐰 + Misi
+      </button>
+      <button class="btn btn-sm btn-quick-goal" onclick="window.openModal('modal-add-goal');">
+        🍯 + Celengan
+      </button>
+      <button class="btn btn-sm btn-quick-note" onclick="window.openModal('modal-add-note');">
+        💌 + Memo
+      </button>
+    </div>
+
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
       <button class="tab-btn active" data-tab="tab-overview">
-        📊 Ringkasan Manis
+        📊 Ringkasan
       </button>
       <button class="tab-btn" data-tab="tab-keuangan">
         💰 Dompet & Celengan
@@ -99,10 +101,13 @@
         🐰 Misi Bareng
       </button>
       <button class="tab-btn" data-tab="tab-notes-dnd">
-        🎀 Resep Bahagia & Memo
+        🎀 Resep & Memo
       </button>
       <button class="tab-btn" data-tab="tab-progress">
-        🌟 Kilas Balik & Cinta
+        🌟 Kilas Balik
+      </button>
+      <button class="tab-btn" data-tab="tab-history">
+        🕒 Histori & Terhapus
       </button>
     </nav>
 
@@ -393,7 +398,7 @@
           </div>
         </div>
 
-        <!-- Agenda List -->
+        <!-- Agenda List & Deleted Schedules -->
         <div class="card">
           <div class="card-header">
             <div>
@@ -401,7 +406,20 @@
               <div class="card-subtitle">Urutan kronologis kegiatan & kencan terdekat</div>
             </div>
           </div>
-          <div id="schedule-agenda-list" style="max-height: 520px; overflow-y: auto;"></div>
+          <div id="schedule-agenda-list" style="max-height: 420px; overflow-y: auto;"></div>
+
+          <!-- Deleted Schedules Quick View -->
+          <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 2px dashed var(--border-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+              <span style="font-weight: 800; font-size: 0.825rem; color: var(--text-muted);">
+                🗑️ Kegiatan yang Dihapus (Pulihkan)
+              </span>
+              <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-tab=\'tab-history\']').click()" style="font-size: 0.725rem; padding: 0.2rem 0.5rem;">
+                Lihat Semua
+              </button>
+            </div>
+            <div id="schedule-deleted-mini-list"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -581,6 +599,41 @@
           Reset Data ke Contoh Awal Bawaan
         </button>
       </div>
+    </section>
+
+    <!-- ==================== TAB 7: HISTORI & SAMPAH ==================== -->
+    <section id="tab-history" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.3rem; font-weight: 900;">🕒 Histori Aktivitas & Tempat Sampah</h2>
+          <p style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Lihat riwayat perubahan, catatan yang pernah dihapus, dan pulihkan kembali kapan saja.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button class="btn btn-secondary btn-sm" id="btn-clear-trash" title="Hapus permanen semua riwayat sampah">
+            🧹 Bersihkan Sampah
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter pills -->
+      <div class="card" style="margin-bottom: 1.25rem; padding: 0.85rem 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button class="btn btn-sm history-filter-btn active" data-filter="all">Semua</button>
+            <button class="btn btn-sm history-filter-btn" data-filter="delete">🗑️ Yang Dihapus</button>
+            <button class="btn btn-sm history-filter-btn" data-filter="expense">🛍️ Belanja</button>
+            <button class="btn btn-sm history-filter-btn" data-filter="income">💵 Rezeki</button>
+            <button class="btn btn-sm history-filter-btn" data-filter="schedule">📅 Jadwal</button>
+            <button class="btn btn-sm history-filter-btn" data-filter="todo">🐰 Misi To-Do</button>
+          </div>
+          <div id="history-total-count" style="font-size: 0.85rem; font-weight: 800; color: var(--text-muted);">
+            0 catatan riwayat
+          </div>
+        </div>
+      </div>
+
+      <!-- History list container -->
+      <div id="history-items-list" class="history-list"></div>
     </section>
   </main>
 

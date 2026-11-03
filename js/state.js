@@ -194,6 +194,7 @@ class StateManager {
 
     if (!this.data.dosAndDonts) this.data.dosAndDonts = JSON.parse(JSON.stringify(defaultData.dosAndDonts));
     if (!this.data.notes) this.data.notes = JSON.parse(JSON.stringify(defaultData.notes));
+    if (!this.data.activityHistory) this.data.activityHistory = [];
     if (!this.data.savingsGoals || this.data.savingsGoals.length <= 3) {
       this.data.savingsGoals = JSON.parse(JSON.stringify(defaultData.savingsGoals));
     } else {
@@ -205,6 +206,96 @@ class StateManager {
     if (!this.data.months[this.data.currentMonth]) {
       this.initMonth(this.data.currentMonth);
     }
+  }
+
+  // History & Trash System (Mencatat semua aktivitas & item terhapus)
+  recordHistory(actionType, itemType, title, amount = null, actor = null, itemData = null) {
+    if (!this.data.activityHistory) this.data.activityHistory = [];
+    const currentActor = actor || (window.authManager && window.authManager.getCurrentUserId()) || 'user';
+    const actorName = currentActor === 'dewa' ? '🐻 Mas Dewa' : (currentActor === 'ayu' ? '🐰 Neng Ayu' : '🐾 Pasangan');
+
+    const now = new Date();
+    const timeFormatted = `${now.getDate()} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][now.getMonth()]} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    const entry = {
+      id: 'act-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+      type: actionType, // 'delete', 'create', 'restore'
+      itemType: itemType, // 'expense', 'income', 'schedule', 'todo', 'savings', 'note', 'do', 'dont', 'habit'
+      title: title || 'Item',
+      amount: amount ? Number(amount) : null,
+      actor: currentActor,
+      actorName: actorName,
+      timestamp: Date.now(),
+      timeFormatted: timeFormatted,
+      itemData: itemData ? JSON.parse(JSON.stringify(itemData)) : null,
+      monthKey: this.data.currentMonth,
+      restored: false
+    };
+
+    this.data.activityHistory.unshift(entry);
+    if (this.data.activityHistory.length > 100) {
+      this.data.activityHistory = this.data.activityHistory.slice(0, 100);
+    }
+    return entry;
+  }
+
+  getHistory(filter = 'all') {
+    const list = this.data.activityHistory || [];
+    if (filter === 'all') return list;
+    if (filter === 'delete') return list.filter(e => e.type === 'delete');
+    return list.filter(e => e.itemType === filter);
+  }
+
+  restoreHistoryItem(historyId) {
+    if (!this.data.activityHistory) return false;
+    const entry = this.data.activityHistory.find(e => e.id === historyId);
+    if (!entry || !entry.itemData) return false;
+
+    const data = JSON.parse(JSON.stringify(entry.itemData));
+    const month = this.getMonthData(entry.monthKey || this.data.currentMonth);
+
+    if (entry.itemType === 'expense') {
+      month.expenses.unshift(data);
+    } else if (entry.itemType === 'income') {
+      month.incomes.unshift(data);
+    } else if (entry.itemType === 'schedule') {
+      month.schedules.push(data);
+      month.schedules.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    } else if (entry.itemType === 'todo') {
+      month.todos.unshift(data);
+    } else if (entry.itemType === 'savings') {
+      if (!this.data.savingsGoals) this.data.savingsGoals = [];
+      this.data.savingsGoals.push(data);
+    } else if (entry.itemType === 'note') {
+      if (!this.data.notes) this.data.notes = [];
+      this.data.notes.unshift(data);
+    } else if (entry.itemType === 'habit') {
+      if (!month.habits) month.habits = [];
+      month.habits.push(data);
+    } else if (entry.itemType === 'do') {
+      if (!this.data.dosAndDonts) this.data.dosAndDonts = { dos: [], donts: [] };
+      this.data.dosAndDonts.dos.push(data);
+    } else if (entry.itemType === 'dont') {
+      if (!this.data.dosAndDonts) this.data.dosAndDonts = { dos: [], donts: [] };
+      this.data.dosAndDonts.donts.push(data);
+    }
+
+    entry.restored = true;
+    this.recordHistory('restore', entry.itemType, entry.title, entry.amount, window.authManager?.getCurrentUserId(), data);
+    this.save(`memulihkan kembali "${entry.title}" 🔄`);
+    return true;
+  }
+
+  deleteHistoryItem(historyId) {
+    if (!this.data.activityHistory) return;
+    this.data.activityHistory = this.data.activityHistory.filter(e => e.id !== historyId);
+    this.save('menghapus catatan riwayat');
+  }
+
+  clearTrash() {
+    if (!this.data.activityHistory) return;
+    this.data.activityHistory = this.data.activityHistory.filter(e => e.type !== 'delete');
+    this.save('membersihkan riwayat terhapus');
   }
 
   onChange(callback) {
@@ -348,12 +439,17 @@ class StateManager {
     item.id = 'inc-' + Date.now();
     item.amount = Number(item.amount) || 0;
     month.incomes.unshift(item);
+    this.recordHistory('create', 'income', item.source, item.amount, window.authManager?.getCurrentUserId(), item);
     this.save(`menambahkan rezeki ${formatRupiah(item.amount)} (${item.source}) 💵`);
     return item;
   }
 
   deleteIncome(id) {
     const month = this.getMonthData();
+    const item = month.incomes.find(i => i.id === id);
+    if (item) {
+      this.recordHistory('delete', 'income', item.source, item.amount, window.authManager?.getCurrentUserId(), item);
+    }
     month.incomes = month.incomes.filter(i => i.id !== id);
     this.save('menghapus catatan rezeki 🗑️');
   }
@@ -363,12 +459,17 @@ class StateManager {
     item.id = 'exp-' + Date.now();
     item.amount = Number(item.amount) || 0;
     month.expenses.unshift(item);
+    this.recordHistory('create', 'expense', item.title, item.amount, window.authManager?.getCurrentUserId(), item);
     this.save(`mencatat belanja ${formatRupiah(item.amount)} (${item.title}) 🛍️`);
     return item;
   }
 
   deleteExpense(id) {
     const month = this.getMonthData();
+    const item = month.expenses.find(i => i.id === id);
+    if (item) {
+      this.recordHistory('delete', 'expense', item.title, item.amount, window.authManager?.getCurrentUserId(), item);
+    }
     month.expenses = month.expenses.filter(i => i.id !== id);
     this.save('menghapus catatan belanja 🗑️');
   }
@@ -414,6 +515,7 @@ class StateManager {
     goal.target = Number(goal.target) || 0;
     goal.collected = Number(goal.collected) || 0;
     this.data.savingsGoals.push(goal);
+    this.recordHistory('create', 'savings', goal.title, goal.target, window.authManager?.getCurrentUserId(), goal);
     this.save(`menambahkan celengan impian baru: "${goal.title}" 🍯`);
     return goal;
   }
@@ -427,6 +529,10 @@ class StateManager {
   }
 
   deleteSavingsGoal(id) {
+    const item = (this.data.savingsGoals || []).find(g => g.id === id);
+    if (item) {
+      this.recordHistory('delete', 'savings', item.title, item.target, window.authManager?.getCurrentUserId(), item);
+    }
     this.data.savingsGoals = this.data.savingsGoals.filter(g => g.id !== id);
     this.save('menghapus celengan impian 🗑️');
   }
@@ -441,12 +547,17 @@ class StateManager {
     sch.id = 'sch-' + Date.now();
     month.schedules.push(sch);
     month.schedules.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    this.recordHistory('create', 'schedule', sch.title, null, window.authManager?.getCurrentUserId(), sch);
     this.save(`menambahkan jadwal agenda: "${sch.title}" 📅`);
     return sch;
   }
 
   deleteSchedule(id) {
     const month = this.getMonthData();
+    const item = month.schedules.find(s => s.id === id);
+    if (item) {
+      this.recordHistory('delete', 'schedule', item.title, null, window.authManager?.getCurrentUserId(), item);
+    }
     month.schedules = month.schedules.filter(s => s.id !== id);
     this.save('menghapus agenda jadwal 🗑️');
   }
@@ -461,6 +572,7 @@ class StateManager {
     todo.id = 'td-' + Date.now();
     todo.status = todo.status || 'todo';
     month.todos.unshift(todo);
+    this.recordHistory('create', 'todo', todo.title, null, window.authManager?.getCurrentUserId(), todo);
     this.save(`menambahkan misi baru: "${todo.title}" 🐰`);
     return todo;
   }
@@ -479,6 +591,10 @@ class StateManager {
 
   deleteTodo(id) {
     const month = this.getMonthData();
+    const item = month.todos.find(t => t.id === id);
+    if (item) {
+      this.recordHistory('delete', 'todo', item.title, null, window.authManager?.getCurrentUserId(), item);
+    }
     month.todos = month.todos.filter(t => t.id !== id);
     this.save('menghapus misi to-do 🗑️');
   }
@@ -507,6 +623,10 @@ class StateManager {
 
   deleteDo(id) {
     const dnd = this.getDosAndDonts();
+    const item = dnd.dos.find(d => d.id === id);
+    if (item) {
+      this.recordHistory('delete', 'do', item.text, null, window.authManager?.getCurrentUserId(), item);
+    }
     dnd.dos = dnd.dos.filter(d => d.id !== id);
     this.save('menghapus resep bahagia 🗑️');
   }
@@ -527,6 +647,10 @@ class StateManager {
 
   deleteDont(id) {
     const dnd = this.getDosAndDonts();
+    const item = dnd.donts.find(d => d.id === id);
+    if (item) {
+      this.recordHistory('delete', 'dont', item.text, null, window.authManager?.getCurrentUserId(), item);
+    }
     dnd.donts = dnd.donts.filter(d => d.id !== id);
     this.save('menghapus pantangan 🗑️');
   }
@@ -557,6 +681,10 @@ class StateManager {
   }
 
   deleteNote(id) {
+    const item = (this.getNotes() || []).find(n => n.id === id);
+    if (item) {
+      this.recordHistory('delete', 'note', item.title, null, window.authManager?.getCurrentUserId(), item);
+    }
     this.data.notes = this.getNotes().filter(n => n.id !== id);
     this.save('menghapus memo 🗑️');
   }
@@ -610,6 +738,10 @@ class StateManager {
 
   deleteHabit(habitId) {
     const month = this.getMonthData();
+    const item = (month.habits || []).find(h => h.id === habitId);
+    if (item) {
+      this.recordHistory('delete', 'habit', item.name, null, window.authManager?.getCurrentUserId(), item);
+    }
     month.habits = month.habits.filter(h => h.id !== habitId);
     this.save('menghapus kebiasaan 🗑️');
   }

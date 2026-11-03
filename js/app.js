@@ -530,6 +530,47 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+    renderDeletedScheduleList();
+  }
+
+  function renderDeletedScheduleList() {
+    const miniContainer = document.getElementById('schedule-deleted-mini-list');
+    if (!miniContainer) return;
+
+    const deletedSchedules = (window.appState.data.activityHistory || [])
+      .filter(h => h.type === 'delete' && h.itemType === 'schedule' && !h.restored)
+      .slice(0, 3);
+
+    if (deletedSchedules.length === 0) {
+      miniContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.775rem; text-align:center; padding:0.5rem 0;">Tidak ada jadwal yang baru dihapus.</p>`;
+      return;
+    }
+
+    miniContainer.innerHTML = '';
+    deletedSchedules.forEach(item => {
+      const el = document.createElement('div');
+      el.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:rgba(254,226,226,0.25); border:1px solid #fecdd3; border-radius:8px; padding:0.4rem 0.65rem; margin-bottom:0.4rem; font-size:0.8rem;';
+      el.innerHTML = `
+        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:65%; font-weight:700;">
+          🗑️ ${item.title}
+        </span>
+        <button class="btn btn-sm btn-primary restore-mini-btn" data-id="${item.id}" style="font-size:0.7rem; padding:0.2rem 0.5rem;">
+          🔄 Pulihkan
+        </button>
+      `;
+      miniContainer.appendChild(el);
+    });
+
+    miniContainer.querySelectorAll('.restore-mini-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        if (window.appState.restoreHistoryItem(id)) {
+          showToast('Jadwal berhasil dipulihkan kembali! 🌸', '🔄');
+          renderAll();
+        }
+      });
+    });
   }
 
   // 8. Render To-Do List Tab
@@ -1158,6 +1199,167 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 14. Render History & Trash Tab
+  let currentHistoryFilter = 'all';
+
+  function renderHistoryTab() {
+    const listContainer = document.getElementById('history-items-list');
+    const countEl = document.getElementById('history-total-count');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    const history = window.appState.getHistory(currentHistoryFilter);
+
+    if (countEl) {
+      countEl.textContent = `${history.length} catatan riwayat`;
+    }
+
+    if (history.length === 0) {
+      listContainer.innerHTML = `
+        <div class="card" style="text-align: center; padding: 2.5rem 1rem; color: var(--text-muted);">
+          <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🌸</div>
+          <p style="font-weight: 800; font-size: 1rem; margin-bottom: 0.25rem;">Belum ada riwayat aktivitas</p>
+          <p style="font-size: 0.825rem;">Setiap ada pemasukan, pengeluaran, jadwal, atau item yang dihapus, riwayatnya akan tersimpan rapi di sini ✨</p>
+        </div>
+      `;
+      return;
+    }
+
+    history.forEach(item => {
+      const card = document.createElement('div');
+      const isDeleted = item.type === 'delete';
+      const isRestored = item.restored;
+
+      card.className = `history-card ${isDeleted ? 'is-deleted' : ''} ${isRestored ? 'is-restored' : ''}`;
+
+      let icon = '📝';
+      let iconBg = '#f3f4f6';
+      let iconColor = '#4b5563';
+      let typeLabel = 'Aktivitas';
+
+      if (item.itemType === 'expense') {
+        icon = isDeleted ? '🗑️' : '🛍️';
+        iconBg = '#ffe4e6';
+        iconColor = '#e11d48';
+        typeLabel = 'Belanja';
+      } else if (item.itemType === 'income') {
+        icon = isDeleted ? '🗑️' : '💵';
+        iconBg = '#dcfce7';
+        iconColor = '#16a34a';
+        typeLabel = 'Rezeki';
+      } else if (item.itemType === 'schedule') {
+        icon = isDeleted ? '🗑️' : '📅';
+        iconBg = '#e0f2fe';
+        iconColor = '#0284c7';
+        typeLabel = 'Jadwal';
+      } else if (item.itemType === 'todo') {
+        icon = isDeleted ? '🗑️' : '🐰';
+        iconBg = '#fdf4ff';
+        iconColor = '#c026d3';
+        typeLabel = 'Misi To-Do';
+      } else if (item.itemType === 'savings') {
+        icon = isDeleted ? '🗑️' : '🍯';
+        iconBg = '#fef3c7';
+        iconColor = '#d97706';
+        typeLabel = 'Celengan';
+      } else if (item.itemType === 'note') {
+        icon = isDeleted ? '🗑️' : '💌';
+        iconBg = '#fff7ed';
+        iconColor = '#ea580c';
+        typeLabel = 'Memo';
+      } else if (item.itemType === 'habit') {
+        icon = isDeleted ? '🗑️' : '🏃';
+        iconBg = '#ecfdf5';
+        iconColor = '#059669';
+        typeLabel = 'Kebiasaan';
+      }
+
+      let actionDesc = '';
+      if (item.type === 'delete') {
+        actionDesc = `<span style="color: #e11d48; font-weight: 800;">Dihapus oleh ${item.actorName || 'Pasangan'}</span>`;
+      } else if (item.type === 'restore') {
+        actionDesc = `<span style="color: #10b981; font-weight: 800;">Dipulihkan kembali</span>`;
+      } else {
+        actionDesc = `<span style="color: #0284c7; font-weight: 800;">Ditambahkan oleh ${item.actorName || 'Pasangan'}</span>`;
+      }
+
+      const amountText = item.amount ? ` • <strong>${window.formatRupiah(item.amount)}</strong>` : '';
+
+      card.innerHTML = `
+        <div class="history-icon-badge" style="background: ${iconBg}; color: ${iconColor};">
+          ${icon}
+        </div>
+        <div class="history-info">
+          <div class="history-title">
+            ${item.title} ${isRestored ? '<span class="badge-tag" style="background:#dcfce7; color:#16a34a; font-size:0.7rem;">Sudah Dipulihkan</span>' : ''}
+          </div>
+          <div class="history-meta">
+            <span class="badge-tag">${typeLabel}</span>
+            <span>${actionDesc}</span>
+            <span>🕒 ${item.timeFormatted || ''}</span>
+            ${amountText}
+          </div>
+        </div>
+        <div class="history-actions">
+          ${isDeleted && !isRestored ? `
+            <button class="btn btn-primary btn-sm restore-history-btn" data-id="${item.id}" title="Pulihkan kembali ke daftar">
+              🔄 Pulihkan
+            </button>
+          ` : ''}
+          <button class="btn btn-secondary btn-sm delete-history-perm-btn" data-id="${item.id}" title="Hapus catatan dari riwayat">
+            ✖
+          </button>
+        </div>
+      `;
+
+      listContainer.appendChild(card);
+    });
+
+    // Wire restore buttons
+    listContainer.querySelectorAll('.restore-history-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        const ok = window.appState.restoreHistoryItem(id);
+        if (ok) {
+          showToast('Item berhasil dipulihkan kembali! 🌸✨', '🔄');
+          renderAll();
+        }
+      });
+    });
+
+    // Wire delete single history entry
+    listContainer.querySelectorAll('.delete-history-perm-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        window.appState.deleteHistoryItem(id);
+        showToast('Catatan riwayat dihapus', '🗑️');
+        renderHistoryTab();
+      });
+    });
+  }
+
+  // Filter history buttons
+  document.querySelectorAll('.history-filter-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.history-filter-btn').forEach(b => b.classList.remove('active'));
+      e.currentTarget.classList.add('active');
+      currentHistoryFilter = e.currentTarget.getAttribute('data-filter');
+      renderHistoryTab();
+    });
+  });
+
+  // Clear all trash button
+  const btnClearTrash = document.getElementById('btn-clear-trash');
+  if (btnClearTrash) {
+    btnClearTrash.addEventListener('click', () => {
+      if (confirm('Bersihkan semua riwayat item yang pernah dihapus?')) {
+        window.appState.clearTrash();
+        showToast('Riwayat sampah berhasil dibersihkan! 🧹', '✨');
+        renderHistoryTab();
+      }
+    });
+  }
+
   // Global Render function
   function renderAll() {
     renderOverview();
@@ -1169,6 +1371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderTodoList();
     renderNotesAndDnd();
     renderProgressTab();
+    renderHistoryTab();
   }
 
   // Listen to remote server sync updates
