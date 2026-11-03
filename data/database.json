@@ -1,0 +1,620 @@
+{
+  "currentMonth": "2026-11",
+  "profiles": {
+    "dewa": {
+      "name": "Dewa",
+      "role": "Partner & Tech Enthusiast",
+      "color": "#2563eb"
+    },
+    "ayu": {
+      "name": "Ayu",
+      "role": "Partner & Creative Soul",
+      "color": "#e11d48"
+    }
+  },
+  "dosAndDonts": {
+    "dos": [
+      {
+        "id": "do-1",
+        "text": "Diskusikan bersama sebelum melakukan pengeluaran di atas Rp 500.000",
+        "category": "Keuangan",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "do-2",
+        "text": "Catat setiap pemasukan & pengeluaran setiap malam sebelum tidur",
+        "category": "Kedisiplinan",
+        "addedBy": "ayu",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "do-3",
+        "text": "Sisihkan tabungan nikah & dana darurat di awal gajian (Pay yourself first)",
+        "category": "Tabungan",
+        "addedBy": "dewa",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "do-4",
+        "text": "Deep talk & waktu kencan tanpa pegang HP minimal 1x seminggu",
+        "category": "Hubungan",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "do-5",
+        "text": "Saling mengapresiasi dan berterima kasih atas kerja keras masing-masing",
+        "category": "Mindset",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "do-6",
+        "text": "Selalu jujur dan terbuka mengenai pengeluaran mendadak atau bantuan keluarga",
+        "category": "Keuangan",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      }
+    ],
+    "donts": [
+      {
+        "id": "dont-1793545590103",
+        "text": "jangan Selingkuh",
+        "category": "Komunikasi",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "dont-1",
+        "text": "Jangan belanja impulsif saat lapar, lelah, atau tergiur diskon kilat (tunggu 24 jam)",
+        "category": "Belanja",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "dont-2",
+        "text": "Jangan memendam uneg-uneg, rasa kesal, atau masalah keuangan sendirian",
+        "category": "Komunikasi",
+        "addedBy": "ayu",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "dont-3",
+        "text": "Jangan memakai uang tabungan darurat & impian untuk hal non-esensial / gengsi",
+        "category": "Tabungan",
+        "addedBy": "dewa",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "dont-4",
+        "text": "Jangan membandingkan kondisi finansial atau hubungan kita dengan orang lain di media sosial",
+        "category": "Mindset",
+        "addedBy": "bareng",
+        "date": "2026-11-01"
+      },
+      {
+        "id": "dont-5",
+        "text": "Jangan menunda pembayaran tagihan rutin bulanan hingga mendekati jatuh tempo",
+        "category": "Tagihan",
+        "addedBy": "dewa",
+        "date": "2026-11-01"
+      }
+    ]
+  },
+  "notes": [
+    {
+      "id": "nt-1",
+      "title": "💡 Ide Kencan & Quality Time Bulan Ini",
+      "content": "1. Masak pasta bareng di hari Minggu sore\n2. Piknik santai di taman kota sambil baca buku\n3. Nonton film di bioskop pilihan Ayu\n4. Sunset walk di pinggir pantai / rooftop kafe",
+      "category": "Kencan",
+      "author": "bareng",
+      "color": "#fef3c7",
+      "pinned": true,
+      "updatedAt": "2026-11-01"
+    },
+    {
+      "id": "nt-2",
+      "title": "🛒 Daftar Belanja & Restock Dapur",
+      "content": "• Minyak zaitun & butter\n• Susu oat & biji kopi arabika\n• Sabun cuci pakaian & pewangi\n• Bumbu dapur (bawang merah, putih, lada)",
+      "category": "Belanja",
+      "author": "ayu",
+      "color": "#fce7f3",
+      "pinned": false,
+      "updatedAt": "2026-11-02"
+    },
+    {
+      "id": "nt-3",
+      "title": "💍 Catatan Kriteria Vendor & Acara Impian",
+      "content": "• Konsep: Intimate warm wedding (150-200 pax)\n• Dominasi warna: Sage green & warm ivory\n• Utamakan vendor catering yang rasa masakannya sudah diuji\n• Dokumentasi foto & video bergaya natural candid",
+      "category": "Masa Depan",
+      "author": "bareng",
+      "color": "#e0e7ff",
+      "pinned": true,
+      "updatedAt": "2026-11-01"
+    }
+  ],
+  "savingsGoals": [
+    {
+      "id": "goal-2",
+      "title": "✈️ Liburan Akhir Tahun (Bali / Jepang)",
+      "target": 25000000,
+      "collected": 20500000,
+      "category": "Liburan",
+      "targetDate": "2026-12"
+    },
+    {
+      "id": "goal-3",
+      "title": "🛡️ Dana Darurat Bersama (6 Bulan)",
+      "target": 35000000,
+      "collected": 27000000,
+      "category": "Darurat",
+      "targetDate": "2027-04"
+    }
+  ],
+  "months": {
+    "2026-11": {
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "exp-1",
+          "title": "Belanja Dapur & Supermarket",
+          "category": "Belanja",
+          "amount": 1850000,
+          "paidBy": "bareng",
+          "date": "2026-11-02",
+          "notes": "Bahan masakan 2 minggu"
+        },
+        {
+          "id": "exp-2",
+          "title": "Sewa Tempat & Listrik + WiFi",
+          "category": "Tagihan",
+          "amount": 2400000,
+          "paidBy": "dewa",
+          "date": "2026-11-03",
+          "notes": "Indihome & Token listrik"
+        },
+        {
+          "id": "exp-3",
+          "title": "Date Night & Kuliner Weekend",
+          "category": "Kencan",
+          "amount": 750000,
+          "paidBy": "bareng",
+          "date": "2026-11-06",
+          "notes": "Dinner & nonton bioskop"
+        },
+        {
+          "id": "exp-4",
+          "title": "Bensin & Transport Harian",
+          "category": "Transport",
+          "amount": 550000,
+          "paidBy": "dewa",
+          "date": "2026-11-07",
+          "notes": "Bensin motor & tol"
+        },
+        {
+          "id": "exp-5",
+          "title": "Perlengkapan Skincare & Rumah",
+          "category": "Kebutuhan",
+          "amount": 620000,
+          "paidBy": "ayu",
+          "date": "2026-11-05",
+          "notes": "Restock sabun, shampoo & reed diffuser"
+        },
+        {
+          "id": "exp-6",
+          "title": "Alokasi Tabungan Bersama",
+          "category": "Investasi",
+          "amount": 5000000,
+          "paidBy": "bareng",
+          "date": "2026-11-04",
+          "notes": "Setor ke rekening tabungan bersama"
+        }
+      ],
+      "schedules": [
+        {
+          "id": "sch-1",
+          "title": "Presentasi Project Akhir Tahun",
+          "person": "dewa",
+          "date": "2026-11-04",
+          "time": "09:30",
+          "location": "Kantor Dewa",
+          "category": "Kerja"
+        },
+        {
+          "id": "sch-2",
+          "title": "Kelas Webinar Digital Marketing",
+          "person": "ayu",
+          "date": "2026-11-05",
+          "time": "14:00",
+          "location": "Online Zoom",
+          "category": "Belajar"
+        },
+        {
+          "id": "sch-3",
+          "title": "Movie Night & Dinner Bareng",
+          "person": "bareng",
+          "date": "2026-11-06",
+          "time": "19:00",
+          "location": "Mall Kota Kasablanka",
+          "category": "Kencan"
+        },
+        {
+          "id": "sch-4",
+          "title": "Badminton Bersama Teman",
+          "person": "dewa",
+          "date": "2026-11-07",
+          "time": "19:30",
+          "location": "Gor Bulutangkis",
+          "category": "Olahraga"
+        },
+        {
+          "id": "sch-5",
+          "title": "Yoga & Pilates Morning",
+          "person": "ayu",
+          "date": "2026-11-08",
+          "time": "08:00",
+          "location": "Studio Fit",
+          "category": "Olahraga"
+        },
+        {
+          "id": "sch-6",
+          "title": "Belanja Kebutuhan Mingguan",
+          "person": "bareng",
+          "date": "2026-11-09",
+          "time": "10:30",
+          "location": "GrandLucky",
+          "category": "Belanja"
+        },
+        {
+          "id": "sch-7",
+          "title": "Makan Siang Bareng Keluarga Ayu",
+          "person": "bareng",
+          "date": "2026-11-15",
+          "time": "12:30",
+          "location": "Resto Sunda",
+          "category": "Keluarga"
+        },
+        {
+          "id": "sch-8",
+          "title": "Deep Talk & Review Keuangan Bulanan",
+          "person": "bareng",
+          "date": "2026-11-20",
+          "time": "20:00",
+          "location": "Coffee Shop Favorit",
+          "category": "Evaluasi"
+        },
+        {
+          "id": "sch-9",
+          "title": "Short Weekend Staycation",
+          "person": "bareng",
+          "date": "2026-11-28",
+          "time": "11:00",
+          "location": "Villa Asri",
+          "category": "Liburan"
+        }
+      ],
+      "todos": [
+        {
+          "id": "td-1",
+          "title": "Bandingkan paket & paket vendor dekorasi",
+          "assignee": "bareng",
+          "priority": "tinggi",
+          "dueDate": "2026-11-18",
+          "status": "in_progress",
+          "category": "Masa Depan"
+        },
+        {
+          "id": "td-2",
+          "title": "Bikin itinerary detail liburan akhir tahun",
+          "assignee": "ayu",
+          "priority": "sedang",
+          "dueDate": "2026-11-12",
+          "status": "in_progress",
+          "category": "Liburan"
+        },
+        {
+          "id": "td-3",
+          "title": "Service berkala AC kamar utama",
+          "assignee": "dewa",
+          "priority": "sedang",
+          "dueDate": "2026-11-04",
+          "status": "done",
+          "category": "Rumah"
+        },
+        {
+          "id": "td-4",
+          "title": "Restock bahan masakan & detergen",
+          "assignee": "bareng",
+          "priority": "rendah",
+          "dueDate": "2026-11-02",
+          "status": "done",
+          "category": "Belanja"
+        },
+        {
+          "id": "td-5",
+          "title": "Cek polis asuransi & perpanjangan SIM",
+          "assignee": "dewa",
+          "priority": "sedang",
+          "dueDate": "2026-11-22",
+          "status": "todo",
+          "category": "Admin"
+        },
+        {
+          "id": "td-6",
+          "title": "Pilih 3 rekomendasi tempat dinner anniversary",
+          "assignee": "ayu",
+          "priority": "tinggi",
+          "dueDate": "2026-11-16",
+          "status": "todo",
+          "category": "Kencan"
+        }
+      ],
+      "review": {
+        "highlight": "Kencan santai di rooftop sambil membuat roadmap impian bersama 3 tahun ke depan.",
+        "achievement": "Pemasukan gabungan bertambah dan target tabungan bulanan 30% tercapai dengan disiplin!",
+        "improvement": "Kurangi jajan kopi online delivery, lebih sering bikin cold brew bareng di rumah.",
+        "nextMonthTarget": "Konsisten olahraga berdua minimal 3x seminggu dan finalisasi tanggal acara.",
+        "happinessRating": 5,
+        "notes": "Bulan ini sangat produktif, komunikasi kita makin terbuka dan saling support."
+      },
+      "habits": [
+        {
+          "id": "hb-1",
+          "name": "🏃‍♂️ Olahraga / Jalan Sehat (Min 30m)",
+          "assignee": "bareng",
+          "checks": {
+            "1": true,
+            "2": true,
+            "3": false,
+            "4": true,
+            "5": false,
+            "6": true,
+            "7": true,
+            "8": true,
+            "9": true,
+            "14": true
+          }
+        },
+        {
+          "id": "hb-2",
+          "name": "💧 Minum Air 2L Sehari",
+          "assignee": "bareng",
+          "checks": {
+            "1": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true,
+            "6": true,
+            "7": true,
+            "8": true,
+            "10": true,
+            "13": true
+          }
+        },
+        {
+          "id": "hb-3",
+          "name": "📖 Membaca Buku / Skill Baru (15m)",
+          "assignee": "dewa",
+          "checks": {
+            "1": true,
+            "2": false,
+            "3": true,
+            "4": true,
+            "5": true,
+            "6": false,
+            "7": true,
+            "8": true,
+            "11": true,
+            "12": true
+          }
+        },
+        {
+          "id": "hb-4",
+          "name": "🌸 Skincare & Me Time Teratur",
+          "assignee": "ayu",
+          "checks": {
+            "1": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true,
+            "6": true,
+            "7": true,
+            "8": true,
+            "12": true
+          }
+        },
+        {
+          "id": "hb-5",
+          "name": "💬 Deep Talk Tanpa HP (30m)",
+          "assignee": "bareng",
+          "checks": {
+            "1": true,
+            "2": true,
+            "3": false,
+            "4": true,
+            "5": false,
+            "6": true,
+            "7": false,
+            "8": true,
+            "13": true,
+            "14": true
+          }
+        },
+        {
+          "id": "hb-6",
+          "name": "💰 Catat Semua Pengeluaran Hari Ini",
+          "assignee": "bareng",
+          "checks": {
+            "1": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true,
+            "6": true,
+            "7": true,
+            "8": true
+          }
+        }
+      ]
+    },
+    "2026-12": {
+      "incomes": [],
+      "expenses": [],
+      "schedules": [],
+      "todos": [],
+      "review": {
+        "highlight": "",
+        "achievement": "",
+        "improvement": "",
+        "nextMonthTarget": "",
+        "happinessRating": 5,
+        "notes": ""
+      },
+      "habits": [
+        {
+          "id": "hb-1",
+          "name": "🏃‍♂️ Olahraga / Jalan Sehat (Min 30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-2",
+          "name": "💧 Minum Air 2L Sehari",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-3",
+          "name": "📖 Membaca Buku / Skill Baru",
+          "assignee": "dewa",
+          "checks": {}
+        },
+        {
+          "id": "hb-4",
+          "name": "🌸 Skincare & Me Time Teratur",
+          "assignee": "ayu",
+          "checks": {}
+        },
+        {
+          "id": "hb-5",
+          "name": "💬 Deep Talk Tanpa HP (30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-6",
+          "name": "💰 Catat Pengeluaran Harian",
+          "assignee": "bareng",
+          "checks": {}
+        }
+      ]
+    },
+    "2027-01": {
+      "incomes": [],
+      "expenses": [],
+      "schedules": [],
+      "todos": [],
+      "review": {
+        "highlight": "",
+        "achievement": "",
+        "improvement": "",
+        "nextMonthTarget": "",
+        "happinessRating": 5,
+        "notes": ""
+      },
+      "habits": [
+        {
+          "id": "hb-1",
+          "name": "🏃‍♂️ Olahraga / Jalan Sehat (Min 30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-2",
+          "name": "💧 Minum Air 2L Sehari",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-3",
+          "name": "📖 Membaca Buku / Skill Baru",
+          "assignee": "dewa",
+          "checks": {}
+        },
+        {
+          "id": "hb-4",
+          "name": "🌸 Skincare & Me Time Teratur",
+          "assignee": "ayu",
+          "checks": {}
+        },
+        {
+          "id": "hb-5",
+          "name": "💬 Deep Talk Tanpa HP (30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-6",
+          "name": "💰 Catat Pengeluaran Harian",
+          "assignee": "bareng",
+          "checks": {}
+        }
+      ]
+    },
+    "2027-02": {
+      "incomes": [],
+      "expenses": [],
+      "schedules": [],
+      "todos": [],
+      "review": {
+        "highlight": "",
+        "achievement": "",
+        "improvement": "",
+        "nextMonthTarget": "",
+        "happinessRating": 5,
+        "notes": ""
+      },
+      "habits": [
+        {
+          "id": "hb-1",
+          "name": "🏃‍♂️ Olahraga / Jalan Sehat (Min 30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-2",
+          "name": "💧 Minum Air 2L Sehari",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-3",
+          "name": "📖 Membaca Buku / Skill Baru",
+          "assignee": "dewa",
+          "checks": {}
+        },
+        {
+          "id": "hb-4",
+          "name": "🌸 Skincare & Me Time Teratur",
+          "assignee": "ayu",
+          "checks": {}
+        },
+        {
+          "id": "hb-5",
+          "name": "💬 Deep Talk Tanpa HP (30m)",
+          "assignee": "bareng",
+          "checks": {}
+        },
+        {
+          "id": "hb-6",
+          "name": "💰 Catat Pengeluaran Harian",
+          "assignee": "bareng",
+          "checks": {}
+        }
+      ]
+    }
+  }
+}

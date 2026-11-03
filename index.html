@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Dewa & Ayu | Laporan Bulanan & Sinergi Progress</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header class="top-header">
+    <div class="header-content">
+      <div class="brand">
+        <div class="avatar-couple">
+          <div class="avatar-badge avatar-dewa" title="Dewa">D</div>
+          <div class="avatar-badge avatar-ayu" title="Ayu">A</div>
+        </div>
+        <div class="brand-text">
+          <h1>Dewa & Ayu Dashboard <span>💑</span></h1>
+          <p>Laporan Bulanan, Finansial Bersama, Jadwal & Progress Berdua</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Sync Status Indicator (Laptop & HP Live Sync) -->
+        <div id="sync-status-indicator" class="sync-badge sync-offline" title="Memeriksa sinkronisasi...">
+          📡 <span>Mode Offline</span>
+        </div>
+
+        <!-- Mobile QR Access Button (Same Wi-Fi) -->
+        <button class="btn btn-primary btn-sm" id="btn-mobile-access" title="Scan QR Code untuk akses langsung di HP Pasangan">
+          📱 Buka di HP (1 Wi-Fi)
+        </button>
+
+        <!-- Remote Access Guide Button (Different Wi-Fi / Long Distance) -->
+        <button class="btn btn-secondary btn-sm" id="btn-remote-access" title="Cara menghubungkan HP & Laptop jika berada di beda Wi-Fi atau jarak jauh">
+          🌐 Beda Wi-Fi / Jarak Jauh
+        </button>
+
+        <!-- Month Picker -->
+        <div class="month-selector">
+          <span style="font-size: 0.9rem;">🗓️</span>
+          <select id="month-select" aria-label="Pilih Periode Bulan">
+            <!-- Dynamically populated -->
+          </select>
+        </div>
+
+        <!-- Print / PDF -->
+        <button class="btn btn-secondary btn-sm" id="btn-print-report" title="Cetak Laporan ke PDF / Kertas">
+          🖨️ Cetak
+        </button>
+
+        <!-- Export / Import -->
+        <button class="btn btn-secondary btn-sm" id="btn-export-data" title="Download backup data JSON">
+          💾 Backup
+        </button>
+        <button class="btn btn-secondary btn-sm" id="btn-import-trigger" title="Upload restore data JSON">
+          📂 Impor
+        </button>
+        <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+        <!-- Theme Toggle -->
+        <button class="btn-icon" id="theme-toggle-btn" title="Ganti Tema Gelap / Terang">
+          🌙
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-overview">
+        📊 Ringkasan
+      </button>
+      <button class="tab-btn" data-tab="tab-keuangan">
+        💰 Keuangan & Tabungan
+      </button>
+      <button class="tab-btn" data-tab="tab-jadwal">
+        📅 Jadwal & Kalender
+      </button>
+      <button class="tab-btn" data-tab="tab-todo">
+        ✅ To-Do List Bareng
+      </button>
+      <button class="tab-btn" data-tab="tab-notes-dnd">
+        📝 Catatan & Do's / Don'ts
+      </button>
+      <button class="tab-btn" data-tab="tab-progress">
+        🌟 Progress & Evaluasi
+      </button>
+    </nav>
+
+    <!-- ==================== TAB 1: OVERVIEW ==================== -->
+    <section id="tab-overview" class="tab-content active">
+      <!-- 4 Top KPI Stat Cards -->
+      <div class="grid-4" style="margin-bottom: 1.5rem;">
+        <!-- Card 1: Pemasukan -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Pemasukan</span>
+            <div class="stat-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">💵</div>
+          </div>
+          <div class="stat-value" id="overview-total-income">Rp 0</div>
+          <div class="stat-meta" style="flex-direction: column; align-items: flex-start; gap: 2px;">
+            <span id="overview-dewa-share" style="color: var(--color-dewa); font-weight: 600;">Dewa: -</span>
+            <span id="overview-ayu-share" style="color: var(--color-ayu); font-weight: 600;">Ayu: -</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Pengeluaran -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Pengeluaran & Sisa</span>
+            <div class="stat-icon" style="background: rgba(239, 68, 68, 0.12); color: #ef4444;">💸</div>
+          </div>
+          <div class="stat-value" id="overview-total-expense" style="color: var(--color-danger);">Rp 0</div>
+          <div class="stat-meta">
+            <span id="overview-net-savings" style="font-weight: 700; color: #10b981;">Sisa Tabungan: Rp 0</span>
+          </div>
+        </div>
+
+        <!-- Card 3: To-Do List -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">To-Do List Bareng</span>
+            <div class="stat-icon" style="background: rgba(124, 58, 237, 0.12); color: #7c3aed;">📝</div>
+          </div>
+          <div class="stat-value" id="overview-todo-stat">0 / 0 Selesai</div>
+          <div class="progress-bar-wrapper">
+            <div id="overview-todo-progress-bar" class="progress-bar-fill fill-bareng" style="width: 0%;"></div>
+          </div>
+          <div class="stat-meta">
+            <span id="overview-todo-pct">0% Selesai</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Habit Tracker -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Kebiasaan Bersama</span>
+            <div class="stat-icon" style="background: rgba(245, 158, 11, 0.12); color: #f59e0b;">✨</div>
+          </div>
+          <div class="stat-value" id="overview-habit-stat">0% Disiplin</div>
+          <div class="stat-meta">
+            <span id="overview-habit-detail">0 Kebiasaan Aktif</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid-2" style="margin-bottom: 1.5rem;">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">⚖️ Sinergi Pemasukan Dewa & Ayu</div>
+              <div class="card-subtitle">Perbandingan kontribusi finansial bulan ini</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-tab=\'tab-keuangan\']').click()">Detail</button>
+          </div>
+          <div id="overview-income-chart" style="padding: 1rem 0;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🍩 Alokasi Pengeluaran Bersama</div>
+              <div class="card-subtitle">Kategori pengeluaran terbesar bulan ini</div>
+            </div>
+          </div>
+          <div id="overview-expense-chart" style="padding: 0.5rem 0;"></div>
+        </div>
+      </div>
+
+      <!-- Schedules & Goals Previews -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">⏰ Jadwal Terdekat Bulan Ini</div>
+              <div class="card-subtitle">Agenda kerja, kencan, & aktivitas bareng</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-tab=\'tab-jadwal\']').click()">Lihat Kalender</button>
+          </div>
+          <div id="overview-upcoming-schedules"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🎯 Target Tabungan & Impian (Bersama & Pribadi)</div>
+              <div class="card-subtitle">Progress tabungan nikah, liburan, & pribadi masing-masing</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="document.querySelector('[data-tab=\'tab-keuangan\']').click()">+ Setor / Kelola</button>
+          </div>
+          <div id="overview-goals-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 2: KEUANGAN & PEMASUKAN ==================== -->
+    <section id="tab-keuangan" class="tab-content">
+      <!-- Action Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">💰 Manajemen Keuangan & Tabungan</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted);">Kelola pemasukan, pengeluaran bersama, dan tabungan (Bersama, Pribadi Dewa & Pribadi Ayu).</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-dewa" onclick="window.openModal('modal-add-income'); document.getElementById('inc-person').value='dewa';">
+            + Pemasukan Dewa
+          </button>
+          <button class="btn btn-ayu" onclick="window.openModal('modal-add-income'); document.getElementById('inc-person').value='ayu';">
+            + Pemasukan Ayu
+          </button>
+          <button class="btn btn-primary" onclick="window.openModal('modal-add-expense');">
+            + Catat Pengeluaran
+          </button>
+          <button class="btn btn-secondary" onclick="window.openModal('modal-add-goal');">
+            + Target Tabungan Baru
+          </button>
+        </div>
+      </div>
+
+      <!-- Financial Metrics Summary -->
+      <div class="grid-4" style="margin-bottom: 1.5rem;">
+        <div class="stat-card">
+          <span class="stat-label">Total Pemasukan</span>
+          <div class="stat-value" id="fin-total-income" style="color: #10b981;">Rp 0</div>
+          <span class="stat-meta">Total gabungan berdua</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Total Pengeluaran</span>
+          <div class="stat-value" id="fin-total-expense" style="color: var(--color-danger);">Rp 0</div>
+          <span class="stat-meta">Kebutuhan & gaya hidup</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Sisa Bersih Tabungan</span>
+          <div class="stat-value" id="fin-net-savings" style="color: #7c3aed;">Rp 0</div>
+          <span class="stat-meta">Dapat dialokasikan ke tabungan</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Rasio Tabungan (Savings Rate)</span>
+          <div class="stat-value" id="fin-savings-rate">0%</div>
+          <span class="stat-meta">Target ideal: > 25%</span>
+        </div>
+      </div>
+
+      <!-- Incomes Breakdown: Dewa vs Ayu -->
+      <div class="grid-2" style="margin-bottom: 1.5rem;">
+        <!-- Dewa Income -->
+        <div class="card" style="border-top: 4px solid var(--color-dewa);">
+          <div class="card-header">
+            <div>
+              <div class="card-title" style="color: var(--color-dewa);">👨 Pemasukan Dewa</div>
+              <div class="card-subtitle">Gaji kantor, freelance, bonus, dll.</div>
+            </div>
+            <button class="btn btn-dewa btn-sm" onclick="window.openModal('modal-add-income'); document.getElementById('inc-person').value='dewa';">
+              + Tambah
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Sumber / Keterangan</th>
+                  <th>Tanggal</th>
+                  <th>Nominal</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-income-dewa"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Ayu Income -->
+        <div class="card" style="border-top: 4px solid var(--color-ayu);">
+          <div class="card-header">
+            <div>
+              <div class="card-title" style="color: var(--color-ayu);">👩 Pemasukan Ayu</div>
+              <div class="card-subtitle">Gaji kantor, bisnis sampingan, dll.</div>
+            </div>
+            <button class="btn btn-ayu btn-sm" onclick="window.openModal('modal-add-income'); document.getElementById('inc-person').value='ayu';">
+              + Tambah
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Sumber / Keterangan</th>
+                  <th>Tanggal</th>
+                  <th>Nominal</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-income-ayu"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expenses & Tabungan Grid -->
+      <div class="grid-2-1">
+        <!-- Expenses Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🧾 Catatan Pengeluaran Bulan Ini</div>
+              <div class="card-subtitle">Kebutuhan belanja, sewa, hiburan, & date night</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.openModal('modal-add-expense');">
+              + Catat Pengeluaran
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="custom-table">
+              <thead>
+                <tr>
+                  <th>Deskripsi</th>
+                  <th>Kategori</th>
+                  <th>Tanggal</th>
+                  <th>Dibayar Oleh</th>
+                  <th>Jumlah</th>
+                  <th style="text-align: right;">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-expenses"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Savings Goals Card (Tabungan Per Orang & Bersama) -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🎯 Tabungan Bersama & Pribadi</div>
+              <div class="card-subtitle">Progress tabungan nikah, liburan, & impian pribadi</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.openModal('modal-add-goal');">+ Tambah Target</button>
+          </div>
+          <div id="finance-savings-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 3: JADWAL & KALENDER ==================== -->
+    <section id="tab-jadwal" class="tab-content">
+      <!-- Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">📅 Kalender & Jadwal Kegiatan</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted);">Sinkronkan agenda Dewa, Ayu, dan waktu kencan / acara bersama.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <div style="display: flex; gap: 0.25rem; background: var(--bg-subtle); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <button class="btn btn-sm cal-filter-btn active" data-filter="all">Semua</button>
+            <button class="btn btn-sm cal-filter-btn" data-filter="dewa">Dewa 💙</button>
+            <button class="btn btn-sm cal-filter-btn" data-filter="ayu">Ayu 💖</button>
+            <button class="btn btn-sm cal-filter-btn" data-filter="bareng">Bareng 💜</button>
+          </div>
+          <button class="btn btn-primary" onclick="window.openModal('modal-add-schedule');">
+            + Tambah Jadwal
+          </button>
+        </div>
+      </div>
+
+      <div class="grid-2-1">
+        <!-- Interactive Calendar Grid -->
+        <div class="card">
+          <div id="calendar-container"></div>
+          <div style="margin-top: 1rem; font-size: 0.775rem; color: var(--text-muted); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <span><span style="display:inline-block; width:10px; height:10px; background:#bfdbfe; border-radius:2px;"></span> Dewa</span>
+            <span><span style="display:inline-block; width:10px; height:10px; background:#fecdd3; border-radius:2px;"></span> Ayu</span>
+            <span><span style="display:inline-block; width:10px; height:10px; background:#ddd6fe; border-radius:2px;"></span> Bareng</span>
+            <span>💡 <em>Klik tanggal pada kalender untuk menambah jadwal langsung!</em></span>
+          </div>
+        </div>
+
+        <!-- Agenda List -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">📋 Daftar Agenda Bulan Ini</div>
+              <div class="card-subtitle">Urutan kronologis kegiatan & kencan terdekat</div>
+            </div>
+          </div>
+          <div id="schedule-agenda-list" style="max-height: 520px; overflow-y: auto;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== TAB 4: TO-DO LIST BARENG ==================== -->
+    <section id="tab-todo" class="tab-content">
+      <!-- Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">✅ To-Do List & Kolaborasi Bareng</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted);">Daftar tugas rumah, persiapan impian, belanja, dan urusan penting bersama.</p>
+        </div>
+        <button class="btn btn-primary" onclick="window.openModal('modal-add-todo');">
+          + Tambah Tugas Bareng
+        </button>
+      </div>
+
+      <!-- Filters & Counter -->
+      <div class="card" style="margin-bottom: 1.25rem; padding: 0.875rem 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button class="btn btn-sm todo-filter-btn active" data-filter="all">Semua</button>
+            <button class="btn btn-sm todo-filter-btn" data-filter="pending">Belum Selesai</button>
+            <button class="btn btn-sm todo-filter-btn" data-filter="done">Sudah Selesai</button>
+            <button class="btn btn-sm todo-filter-btn" data-filter="bareng">Bareng 💜</button>
+            <button class="btn btn-sm todo-filter-btn" data-filter="dewa">Tugas Dewa 💙</button>
+            <button class="btn btn-sm todo-filter-btn" data-filter="ayu">Tugas Ayu 💖</button>
+          </div>
+          <div id="todo-summary-count" style="font-size: 0.875rem; font-weight: 700; color: #7c3aed;">
+            0 dari 0 selesai
+          </div>
+        </div>
+      </div>
+
+      <!-- Items List -->
+      <div id="todo-items-list" class="todo-list"></div>
+    </section>
+
+    <!-- ==================== TAB 5: CATATAN & DO'S / DON'TS ==================== -->
+    <section id="tab-notes-dnd" class="tab-content">
+      <!-- Toolbar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 800;">📝 Kesepakatan Do's & Don'ts dan Catatan Bersama</h2>
+          <p style="font-size: 0.8125rem; color: var(--text-muted);">Prinsip keuangan & hubungan kita, ide kencan, memo belanja, dan impian bersama.</p>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="btn btn-sm" style="background:#10b981; color:white;" onclick="window.openModal('modal-add-do');">
+            + Tambah DO's
+          </button>
+          <button class="btn btn-sm" style="background:#ef4444; color:white;" onclick="window.openModal('modal-add-dont');">
+            + Tambah DON'Ts
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="window.openModal('modal-add-note');">
+            + Tambah Catatan Baru
+          </button>
+        </div>
+      </div>
+
+      <!-- Do's & Don'ts Columns -->
+      <div class="dnd-container">
+        <!-- DO's Column -->
+        <div class="dnd-card dnd-card-dos">
+          <div class="dnd-header">
+            <div>
+              <div class="dnd-title" style="color: #059669;">
+                <span>✅</span> DO's (Yang Harus / Dianjurkan)
+              </div>
+              <div class="card-subtitle">Prinsip positif yang kita sepakati bersama</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.openModal('modal-add-do');">+ Tambah</button>
+          </div>
+          <div id="dos-items-list" class="dnd-list"></div>
+        </div>
+
+        <!-- DON'Ts Column -->
+        <div class="dnd-card dnd-card-donts">
+          <div class="dnd-header">
+            <div>
+              <div class="dnd-title" style="color: #dc2626;">
+                <span>❌</span> DON'Ts (Yang Dilarang / Dihindari)
+              </div>
+              <div class="card-subtitle">Hal-hal yang kita hindari demi kebaikan bersama</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.openModal('modal-add-dont');">+ Tambah</button>
+          </div>
+          <div id="donts-items-list" class="dnd-list"></div>
+        </div>
+      </div>
+
+      <!-- Shared Notes & Memos Header -->
+      <div style="margin-top: 2rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 700;">📌 Catatan Bebas, Ide & Wishlist Bareng</h3>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Kartu catatan warna-warni untuk ide date night, wishlist barang, dan memo mesra.</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="window.openModal('modal-add-note');">
+          + Catatan Baru
+        </button>
+      </div>
+
+      <!-- Notes Grid -->
+      <div id="shared-notes-container" class="notes-grid"></div>
+    </section>
+
+    <!-- ==================== TAB 6: PROGRESS & EVALUASI ==================== -->
+    <section id="tab-progress" class="tab-content">
+      <div style="margin-bottom: 1.25rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 800;">🌟 Progress, Habit Tracker & Evaluasi Bulanan</h2>
+        <p style="font-size: 0.8125rem; color: var(--text-muted);">Ruang refleksi untuk mencatat pencapaian, mempererat hubungan, dan evaluasi rutin setiap akhir bulan.</p>
+      </div>
+
+      <!-- Daily Habit Tracker Matrix -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🏃‍♂️ Habit Tracker Harian Berdua</div>
+            <div class="card-subtitle">Ceklis konsistensi harian: olahraga, minum air, waktu berkualitas, & me time</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="window.openModal('modal-add-habit');">+ Tambah Kebiasaan</button>
+        </div>
+        <div id="habit-matrix-container"></div>
+      </div>
+
+      <!-- Monthly Review Form -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">📝 Kilas Balik & Evaluasi Bulan Ini</div>
+            <div class="card-subtitle">Refleksi jujur bersama saat monthly date / deep talk</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 0.8125rem; font-weight: 600; color: var(--text-muted);">Kepuasan Hubungan & Kehidupan:</span>
+            <div class="star-rating" id="star-rating-container"></div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="rev-highlight">✨ Momen Terbaik Bulan Ini (Highlight)</label>
+            <textarea id="rev-highlight" class="form-control" placeholder="Contoh: Kencan santai merayakan target kerjaan, jalan-jalan sore bareng..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="rev-achievement">🏆 Pencapaian Terbesar Kita</label>
+            <textarea id="rev-achievement" class="form-control" placeholder="Contoh: Berhasil nabung 30%, project kantor selesai lancar, belanja hemat..."></textarea>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="rev-improvement">💡 Evaluasi & Hal yang Perlu Diperbaiki</label>
+            <textarea id="rev-improvement" class="form-control" placeholder="Contoh: Kurangi jajan konsumtif online, lebih sering ngobrol tanpa gadget..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="rev-next-target">🎯 Target & Fokus Bulan Depan</label>
+            <textarea id="rev-next-target" class="form-control" placeholder="Contoh: Rutin olahraga 3x seminggu, booking tiket liburan, tambah investasi..."></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rev-notes">💌 Pesan Cinta & Catatan Saling Support</label>
+          <textarea id="rev-notes" class="form-control" placeholder="Tuliskan ucapan terima kasih atau kata-kata semangat untuk pasanganmu..."></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button class="btn btn-primary" id="btn-save-review">
+            💾 Simpan Refleksi Bulanan
+          </button>
+        </div>
+      </div>
+
+      <!-- Reset & Data Management Notice -->
+      <div style="text-align: center; padding: 1.5rem 0; color: var(--text-muted); font-size: 0.8125rem;">
+        Semua data tersimpan otomatis di server lokal dan sinkron antara HP & Laptop. Anda dapat membackup data kapan saja.
+        <br>
+        <button id="btn-reset-data" style="background: none; border: none; color: #ef4444; cursor: pointer; text-decoration: underline; margin-top: 0.5rem; font-size: 0.775rem;">
+          Reset Data ke Contoh Awal Bawaan
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile Floating Action Button (FAB) -->
+  <div class="fab-container">
+    <button class="fab-btn" id="fab-quick-btn" title="Input Cepat">+</button>
+  </div>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Modal: Remote Access Guide (Different Wi-Fi / Real-Time) -->
+  <div id="modal-remote-access" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 700; font-size: 1.15rem;">🌐 Cara Akses di HP Saat Beda Wi-Fi & Jarak Jauh</h3>
+        <button type="button" class="btn-icon modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.875rem; line-height: 1.6;">
+        <p style="margin-bottom: 1rem; color: var(--text-muted);">
+          Jika Ayu sedang di luar rumah / kantor (menggunakan paket data 4G/5G atau Wi-Fi lain), gunakan salah satu dari cara mudah berikut agar dashboard tetap <strong>tersinkronisasi real-time</strong>:
+        </p>
+
+        <!-- Method 1 -->
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+          <div style="font-weight: 800; color: #7c3aed; margin-bottom: 0.25rem;">
+            ⚡ Metode 1: Buka Akses Publik Instan (1 Baris Perintah)
+          </div>
+          <p style="font-size: 0.8125rem; color: var(--text-main); margin-bottom: 0.5rem;">
+            Di Terminal laptop Dewa (di folder proyek ini), jalankan:
+          </p>
+          <pre style="background: #0f172a; color: #38bdf8; padding: 0.6rem 0.85rem; border-radius: 6px; font-size: 0.85rem; overflow-x: auto; font-family: monospace;">npm run share</pre>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Terminal akan menghasilkan alamat HTTPS online (contoh: <code>https://xxxxx.loca.lt</code>). Kirim link tersebut ke WhatsApp Ayu. Ayu bisa langsung membukanya di HP dari mana saja di seluruh dunia!
+          </p>
+        </div>
+
+        <!-- Method 2 -->
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color); margin-bottom: 1rem;">
+          <div style="font-weight: 800; color: #0284c7; margin-bottom: 0.25rem;">
+            ☁️ Metode 2: Cloudflare Tunnel (100% Gratis & Sangat Cepat)
+          </div>
+          <p style="font-size: 0.8125rem; color: var(--text-main); margin-bottom: 0.5rem;">
+            Jalankan perintah ini di Terminal laptop:
+          </p>
+          <pre style="background: #0f172a; color: #38bdf8; padding: 0.6rem 0.85rem; border-radius: 6px; font-size: 0.85rem; overflow-x: auto; font-family: monospace;">npm run tunnel</pre>
+          <p style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.5rem;">
+            Cloudflare akan memberikan link aman gratis (contoh: <code>https://xxx.trycloudflare.com</code>) yang bisa dibuka dari HP pasangan secara real-time.
+          </p>
+        </div>
+
+        <!-- Method 3 -->
+        <div style="background: var(--bg-subtle); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-color);">
+          <div style="font-weight: 800; color: #10b981; margin-bottom: 0.25rem;">
+            🚀 Metode 3: Online 24 Jam Non-Stop (Tanpa Perlu Laptop Menyala)
+          </div>
+          <p style="font-size: 0.8125rem; color: var(--text-muted);">
+            Jika ingin dashboard selalu online 24 jam di internet tanpa harus menyalakan laptop, Anda bisa meng-upload proyek ini ke <strong>Render.com</strong> atau <strong>Railway.app</strong> (gratis). Anda akan mendapatkan domain permanen seperti <code>https://dewa-ayu.onrender.com</code>.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary modal-close-btn">Mengerti</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Mobile QR Access (Same Wi-Fi) -->
+  <div id="modal-mobile-access" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 700; font-size: 1.1rem;">📱 Buka di HP (Jaringan Wi-Fi Sama)</h3>
+        <button type="button" class="btn-icon modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Pastikan HP dan Laptop terhubung ke <strong>jaringan Wi-Fi yang sama</strong>. Buka aplikasi Kamera di HP Anda atau Ayu, lalu arahkan ke QR Code ini:
+        </p>
+        <div id="qr-code-display"></div>
+      </div>
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-primary modal-close-btn">Selesai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Quick Action (Mobile) -->
+  <div id="modal-quick-action" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 700; font-size: 1.1rem;">⚡ Input Data Cepat</h3>
+        <button type="button" class="btn-icon modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <button class="btn btn-primary" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-income');">
+          💵 + Input Pemasukan Uang
+        </button>
+        <button class="btn" style="background:#ef4444; color:white;" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-expense');">
+          💸 + Catat Pengeluaran
+        </button>
+        <button class="btn" style="background:#0284c7; color:white;" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-schedule');">
+          📅 + Jadwal Kegiatan Baru
+        </button>
+        <button class="btn" style="background:#10b981; color:white;" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-todo');">
+          ✅ + Tugas To-Do Bareng
+        </button>
+        <button class="btn" style="background:#8b5cf6; color:white;" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-goal');">
+          🎯 + Target Tabungan (Bersama/Pribadi)
+        </button>
+        <button class="btn" style="background:#f59e0b; color:white;" onclick="window.closeModal('modal-quick-action'); window.openModal('modal-add-note');">
+          📝 + Catatan / Memo Bersama
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Income -->
+  <div id="modal-add-income" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-income">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">💵 Tambah Pemasukan Bulanan</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="inc-person">Pemasukan Milik:</label>
+            <select id="inc-person" class="form-control" required>
+              <option value="dewa">Dewa 💙</option>
+              <option value="ayu">Ayu 💖</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inc-source">Sumber Pemasukan:</label>
+            <input type="text" id="inc-source" class="form-control" placeholder="Contoh: Gaji Pokok, Freelance Project, Bonus" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inc-amount">Nominal (Rp):</label>
+            <input type="number" id="inc-amount" class="form-control" placeholder="Contoh: 10000000" min="0" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inc-date">Tanggal Diterima:</label>
+            <input type="date" id="inc-date" class="form-control" value="2026-11-01" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="inc-notes">Catatan Tambahan (Opsional):</label>
+            <input type="text" id="inc-notes" class="form-control" placeholder="Contoh: Sudah dipotong pajak">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Pemasukan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Expense -->
+  <div id="modal-add-expense" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-expense">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">💸 Catat Pengeluaran</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="exp-title">Deskripsi Pengeluaran:</label>
+            <input type="text" id="exp-title" class="form-control" placeholder="Contoh: Belanja Bulanan, Nonton Bioskop, Listrik" required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="exp-category">Kategori:</label>
+              <select id="exp-category" class="form-control" required>
+                <option value="Belanja">Belanja & Kebutuhan</option>
+                <option value="Tagihan">Tagihan & Sewa</option>
+                <option value="Kencan">Date / Hiburan</option>
+                <option value="Transport">Transport & Bensin</option>
+                <option value="Investasi">Investasi & Tabungan</option>
+                <option value="Lainnya">Lain-lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exp-paidBy">Dibayar Oleh:</label>
+              <select id="exp-paidBy" class="form-control" required>
+                <option value="bareng">Bareng (Uang Bersama) 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="exp-amount">Jumlah Nominal (Rp):</label>
+              <input type="number" id="exp-amount" class="form-control" placeholder="Contoh: 500000" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exp-date">Tanggal:</label>
+              <input type="date" id="exp-date" class="form-control" value="2026-11-01" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="exp-notes">Catatan:</label>
+            <input type="text" id="exp-notes" class="form-control" placeholder="Keterangan opsional">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Pengeluaran</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Schedule -->
+  <div id="modal-add-schedule" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-schedule">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">📅 Tambah Jadwal Kegiatan Baru</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="sch-title">Nama Acara / Kegiatan:</label>
+            <input type="text" id="sch-title" class="form-control" placeholder="Contoh: Dinner Bareng, Meeting Kantor, Kelas Yoga" required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="sch-person">Jadwal Milik:</label>
+              <select id="sch-person" class="form-control" required>
+                <option value="bareng">Bareng (Berdua) 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sch-category">Kategori:</label>
+              <select id="sch-category" class="form-control">
+                <option value="Kencan">Kencan / Romantic</option>
+                <option value="Kerja">Pekerjaan / Kantor</option>
+                <option value="Olahraga">Olahraga / Kesehatan</option>
+                <option value="Keluarga">Keluarga / Teman</option>
+                <option value="Belajar">Belajar / Kelas</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="sch-date">Tanggal:</label>
+              <input type="date" id="sch-date" class="form-control" value="2026-11-06" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sch-time">Waktu / Jam:</label>
+              <input type="time" id="sch-time" class="form-control" value="19:00">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="sch-location">Lokasi Tempat:</label>
+            <input type="text" id="sch-location" class="form-control" placeholder="Contoh: Mall Gandaria City, Kantor, Rumah">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add To-Do -->
+  <div id="modal-add-todo" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-todo">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">✅ Tambah Tugas To-Do Bareng</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="td-title">Deskripsi Tugas:</label>
+            <input type="text" id="td-title" class="form-control" placeholder="Contoh: Pesan tiket kereta, riset venue, bersihkan kulkas" required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="td-assignee">Penanggung Jawab:</label>
+              <select id="td-assignee" class="form-control" required>
+                <option value="bareng">Bareng (Berdua) 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="td-priority">Tingkat Prioritas:</label>
+              <select id="td-priority" class="form-control">
+                <option value="sedang">Sedang</option>
+                <option value="tinggi">Tinggi 🔥</option>
+                <option value="rendah">Rendah</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="td-dueDate">Batas Waktu (Deadline):</label>
+              <input type="date" id="td-dueDate" class="form-control" value="2026-11-15">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="td-category">Kategori Tugas:</label>
+              <input type="text" id="td-category" class="form-control" placeholder="Contoh: Rumah, Liburan, Kencan, Belanja">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Tugas</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Savings Goal (Tabungan Per Orang & Bersama) -->
+  <div id="modal-add-goal" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-goal">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">🎯 Tambah Target Impian & Tabungan</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="goal-owner">Milik Tabungan Siapa:</label>
+            <select id="goal-owner" class="form-control" required>
+              <option value="bareng">Tabungan Bersama (Berdua) 💜</option>
+              <option value="dewa">Tabungan Pribadi Dewa 💙</option>
+              <option value="ayu">Tabungan Pribadi Ayu 💖</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="goal-title">Nama Target Tabungan:</label>
+            <input type="text" id="goal-title" class="form-control" placeholder="Contoh: 💍 Tabungan Nikah, 💻 Upgrade Laptop, 🌸 Tabungan Emas" required>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="goal-target">Target Nominal (Rp):</label>
+              <input type="number" id="goal-target" class="form-control" placeholder="Contoh: 20000000" min="0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="goal-collected">Sudah Terkumpul (Rp):</label>
+              <input type="number" id="goal-collected" class="form-control" placeholder="0" min="0" value="0">
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="goal-category">Kategori:</label>
+              <select id="goal-category" class="form-control">
+                <option value="Masa Depan">Masa Depan / Nikah</option>
+                <option value="Liburan">Liburan</option>
+                <option value="Darurat">Dana Darurat</option>
+                <option value="Investasi">Investasi / Emas / Saham</option>
+                <option value="Produktivitas">Gadget / Kerja</option>
+                <option value="Bisnis">Modal Bisnis</option>
+                <option value="Aset">Kendaraan / Rumah</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="goal-targetDate">Estimasi Bulan Tercapai:</label>
+              <input type="month" id="goal-targetDate" class="form-control" value="2027-12">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Target</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add DO's -->
+  <div id="modal-add-do" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-do">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem; color: #059669;">✅ Tambah Kesepakatan DO's</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="do-text">Isi Kesepakatan Positif (DO):</label>
+            <textarea id="do-text" class="form-control" placeholder="Contoh: Selalu konfirmasi ke pasangan sebelum meminjamkan uang ke orang lain" required></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="do-category">Kategori:</label>
+              <select id="do-category" class="form-control">
+                <option value="Keuangan">Keuangan & Belanja</option>
+                <option value="Komunikasi">Komunikasi & Sikap</option>
+                <option value="Hubungan">Hubungan & Kencan</option>
+                <option value="Tabungan">Tabungan & Investasi</option>
+                <option value="Rumah">Rumah Tangga</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="do-addedBy">Diusulkan Oleh:</label>
+              <select id="do-addedBy" class="form-control">
+                <option value="bareng">Bareng (Kesepakatan Berdua) 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn" style="background:#10b981; color:white;">Simpan DO's</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add DON'Ts -->
+  <div id="modal-add-dont" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-dont">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem; color: #dc2626;">❌ Tambah Larangan / DON'Ts</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="dont-text">Isi Larangan / Hal yang Dihindari (DON'T):</label>
+            <textarea id="dont-text" class="form-control" placeholder="Contoh: Jangan mengambil keputusan finansial besar saat kondisi sedang marah atau lelah" required></textarea>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="dont-category">Kategori:</label>
+              <select id="dont-category" class="form-control">
+                <option value="Keuangan">Keuangan & Belanja</option>
+                <option value="Komunikasi">Komunikasi & Sikap</option>
+                <option value="Hubungan">Hubungan & Kencan</option>
+                <option value="Tabungan">Tabungan & Investasi</option>
+                <option value="Belanja">Belanja Impulsif</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dont-addedBy">Diusulkan Oleh:</label>
+              <select id="dont-addedBy" class="form-control">
+                <option value="bareng">Bareng (Kesepakatan Berdua) 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn" style="background:#ef4444; color:white;">Simpan DON'Ts</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Shared Note -->
+  <div id="modal-add-note" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-note">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">📝 Tambah Catatan Bersama</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="nt-title">Judul Catatan:</label>
+            <input type="text" id="nt-title" class="form-control" placeholder="Contoh: Rekomendasi Resto Enak, Rencana Beli Kulkas" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="nt-content">Isi Catatan / Memo:</label>
+            <textarea id="nt-content" class="form-control" style="min-height: 120px;" placeholder="Tuliskan daftar, poin-poin ide, link referensi, atau pesan..." required></textarea>
+          </div>
+          <div class="grid-3">
+            <div class="form-group">
+              <label class="form-label" for="nt-category">Kategori:</label>
+              <input type="text" id="nt-category" class="form-control" placeholder="Contoh: Kencan, Belanja, Impian" value="Umum">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="nt-author">Ditulis Oleh:</label>
+              <select id="nt-author" class="form-control">
+                <option value="bareng">Bareng 💜</option>
+                <option value="dewa">Dewa 💙</option>
+                <option value="ayu">Ayu 💖</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="nt-color">Warna Kertas:</label>
+              <select id="nt-color" class="form-control">
+                <option value="#fef3c7">Kuning Hangat 🟡</option>
+                <option value="#fce7f3">Merah Muda 🌸</option>
+                <option value="#e0e7ff">Biru Muda 🔵</option>
+                <option value="#f3e8ff">Ungu Pastel 🟣</option>
+                <option value="#d1fae5">Hijau Mint 🟢</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Catatan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Habit -->
+  <div id="modal-add-habit" class="modal-backdrop">
+    <div class="modal-content">
+      <form id="form-add-habit">
+        <div class="modal-header">
+          <h3 style="font-weight: 700; font-size: 1.1rem;">🏃 Tambah Kebiasaan Harian Baru</h3>
+          <button type="button" class="btn-icon modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="hb-name">Nama Kebiasaan / Habit:</label>
+            <input type="text" id="hb-name" class="form-control" placeholder="Contoh: 🏃‍♂️ Jogging Pagi, 📖 Baca Buku 20 Halaman, 🧘 Meditasi" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="hb-assignee">Dilakukan Oleh:</label>
+            <select id="hb-assignee" class="form-control" required>
+              <option value="bareng">Bareng Berdua 💜</option>
+              <option value="dewa">Dewa 💙</option>
+              <option value="ayu">Ayu 💖</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary modal-close-btn">Batal</button>
+          <button type="submit" class="btn btn-primary">Tambah ke Tracker</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/state.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/qrcode-generator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
