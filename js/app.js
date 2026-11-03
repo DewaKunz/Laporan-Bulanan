@@ -1,7 +1,6 @@
 /**
- * Main Application Logic for Dewa & Ayu Monthly Dashboard
- * Enhanced with Tabungan Per Orang, Do's & Don'ts, Shared Notes,
- * and Remote Access Guide (Different Wi-Fi / Real-Time).
+ * Main Application Logic for Dewa & Ayu Sweet Space Dashboard
+ * Cute, pastel, bubbly, with rotating sweet quotes & Vercel ready!
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,10 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const themeToggleBtn = document.getElementById('theme-toggle-btn');
   const tabButtons = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
+  const loveBannerText = document.getElementById('love-banner-text');
 
   let calendarInstance = null;
   let activeTab = 'tab-overview';
   let currentSavingsFilter = 'all';
+
+  // Cute Rotating Love Quotes
+  const cuteQuotes = [
+    "🍓 Semangat terus tim Dewa & Ayu! Masa depan indah sedang kita bangun bersama selangkah demi selangkah~ ✨",
+    "🐻 Dewa & 🐰 Ayu selalu kompak, saling dukung, dan saling melengkapi selamanya! 💖",
+    "🍯 Jangan lupa tersenyum hari ini dan luangkan waktu deep talk manis nanti malam ya~ 🌷",
+    "💍 Setiap rupiah yang kita tabung di celengan ini adalah langkah menuju hari bahagia kita! 🎀",
+    "🌸 Bersyukur banget punya kamu yang selalu perhatian dan berjuang bersama setiap hari! 💕",
+    "🧁 Apapun tantangannya hari ini, kita berdua pasti bisa lewati bareng-bareng! Semangat sayang! ✨"
+  ];
+  let quoteIndex = 0;
+
+  if (loveBannerText) {
+    loveBannerText.style.cursor = 'pointer';
+    loveBannerText.title = 'Klik untuk melihat pesan manis lainnya! 💌';
+    loveBannerText.addEventListener('click', () => {
+      quoteIndex = (quoteIndex + 1) % cuteQuotes.length;
+      loveBannerText.innerHTML = `<span>🍓</span> <span>${cuteQuotes[quoteIndex]}</span> <span>✨</span>`;
+      showToast('Pesan cinta baru dibuka! 💌', '💖');
+    });
+  }
 
   // 1. Initialize Month Selector Options
   function initMonthSelector() {
@@ -40,12 +61,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     monthSelect.addEventListener('change', (e) => {
       window.appState.setCurrentMonthKey(e.target.value);
-      showToast(`Bulan diganti ke ${e.target.options[e.target.selectedIndex].text}`);
+      showToast(`Bulan diganti ke ${e.target.options[e.target.selectedIndex].text} 🗓️`, '🌸');
       renderAll();
     });
   }
 
-  // 2. Initialize Theme (Dark/Light)
+  // 2. Initialize Theme (Cute Strawberry Light / Dreamy Midnight Dark)
   function initTheme() {
     const savedTheme = localStorage.getItem('dewa_ayu_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -57,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.setAttribute('data-theme', nextTheme);
       localStorage.setItem('dewa_ayu_theme', nextTheme);
       updateThemeIcon(nextTheme);
+      showToast(nextTheme === 'dark' ? 'Tema Malam Bintang Diaktifkan 🌙✨' : 'Tema Strawberry Diaktifkan 🍓🌸', '🎨');
     });
   }
 
@@ -86,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+    toast.innerHTML = `<span style="font-size: 1.15rem;">${icon}</span> <span>${message}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -104,18 +126,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // KPI 1: Total Pemasukan
     document.getElementById('overview-total-income').textContent = window.formatRupiah(fin.totalIncome);
-    document.getElementById('overview-dewa-share').textContent = `Dewa: ${window.formatRupiah(fin.incomeDewa)} (${fin.dewaShare}%)`;
-    document.getElementById('overview-ayu-share').textContent = `Ayu: ${window.formatRupiah(fin.incomeAyu)} (${fin.ayuShare}%)`;
+    document.getElementById('overview-dewa-share').textContent = `🐻 Dewa: ${window.formatRupiah(fin.incomeDewa)} (${fin.dewaShare}%)`;
+    document.getElementById('overview-ayu-share').textContent = `🐰 Ayu: ${window.formatRupiah(fin.incomeAyu)} (${fin.ayuShare}%)`;
 
     // KPI 2: Total Pengeluaran & Sisa
     document.getElementById('overview-total-expense').textContent = window.formatRupiah(fin.totalExpense);
-    document.getElementById('overview-net-savings').textContent = `Sisa Tabungan: ${window.formatRupiah(fin.netSavings)} (${fin.savingsRate}%)`;
+    document.getElementById('overview-net-savings').textContent = `Sisa Celengan: ${window.formatRupiah(fin.netSavings)} (${fin.savingsRate}%)`;
 
     // KPI 3: To-Do Progress
     const doneTodos = todos.filter(t => t.status === 'done').length;
     const todoPct = todos.length > 0 ? Math.round((doneTodos / todos.length) * 100) : 0;
-    document.getElementById('overview-todo-stat').textContent = `${doneTodos} / ${todos.length} Selesai`;
-    document.getElementById('overview-todo-pct').textContent = `${todoPct}% Selesai`;
+    document.getElementById('overview-todo-stat').textContent = `${doneTodos} / ${todos.length} Misi Selesai`;
+    document.getElementById('overview-todo-pct').textContent = `${todoPct}% Berhasil ✨`;
     document.getElementById('overview-todo-progress-bar').style.width = `${todoPct}%`;
 
     // KPI 4: Habit Streak
@@ -131,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const habitAdherence = totalChecks > 0 ? Math.round((checkedCount / totalChecks) * 100) : 0;
     document.getElementById('overview-habit-stat').textContent = `${habitAdherence}% Disiplin`;
-    document.getElementById('overview-habit-detail').textContent = `${habits.length} Kebiasaan Aktif`;
+    document.getElementById('overview-habit-detail').textContent = `${habits.length} Kebiasaan Kompak 🌷`;
 
     // Render Charts
     window.Charts.renderComparisonBar('overview-income-chart', fin.incomeDewa, fin.incomeAyu);
@@ -142,31 +164,31 @@ document.addEventListener('DOMContentLoaded', () => {
     upcomingContainer.innerHTML = '';
     const sortedSchedules = [...schedules].sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
     if (sortedSchedules.length === 0) {
-      upcomingContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.875rem;">Belum ada jadwal bulan ini.</p>`;
+      upcomingContainer.innerHTML = `<p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 700;">Belum ada jadwal kencan bulan ini~ Yuk rencanakan! 🌸</p>`;
     } else {
       sortedSchedules.slice(0, 4).forEach(item => {
         let badgeColor = 'badge-bareng';
-        let badgeText = 'Bareng 💜';
+        let badgeText = '🐾 Bareng';
         if (item.person === 'dewa') {
           badgeColor = 'badge-dewa';
-          badgeText = 'Dewa 💙';
+          badgeText = '🐻 Dewa';
         } else if (item.person === 'ayu') {
           badgeColor = 'badge-ayu';
-          badgeText = 'Ayu 💖';
+          badgeText = '🐰 Ayu';
         }
 
         const div = document.createElement('div');
-        div.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 0; border-bottom: 1px solid var(--border-color);';
+        div.style.cssText = 'display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1.5px dashed var(--border-color);';
         div.innerHTML = `
           <div>
-            <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-main);">${item.title}</div>
-            <div style="font-size: 0.775rem; color: var(--text-muted);">
-              📍 ${item.location || 'Tempat belum ditentukan'} • ⏰ ${item.time || 'Waktu fleksibel'}
+            <div style="font-weight: 800; font-size: 0.95rem; color: var(--text-main);">${item.title}</div>
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">
+              📍 ${item.location || 'Tempat santai'} • ⏰ ${item.time || 'Waktu fleksibel'}
             </div>
           </div>
           <div style="text-align: right;">
             <span class="badge-persona ${badgeColor}">${badgeText}</span>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">${item.date}</div>
+            <div style="font-size: 0.775rem; font-weight: 700; color: var(--text-muted); margin-top: 3px;">${item.date}</div>
           </div>
         `;
         upcomingContainer.appendChild(div);
@@ -186,21 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('fin-total-income').textContent = window.formatRupiah(fin.totalIncome);
     document.getElementById('fin-total-expense').textContent = window.formatRupiah(fin.totalExpense);
     document.getElementById('fin-net-savings').textContent = window.formatRupiah(fin.netSavings);
-    document.getElementById('fin-savings-rate').textContent = `${fin.savingsRate}% dari Total`;
+    document.getElementById('fin-savings-rate').textContent = `${fin.savingsRate}% dari Rezeki`;
 
     // Incomes Dewa
     const dewaIncomeTbody = document.getElementById('tbody-income-dewa');
     dewaIncomeTbody.innerHTML = '';
     const dewaIncomes = (month.incomes || []).filter(i => i.person === 'dewa');
     if (dewaIncomes.length === 0) {
-      dewaIncomeTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Belum ada catatan pemasukan Dewa</td></tr>`;
+      dewaIncomeTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-weight:600;">Belum ada catatan rezeki Dewa</td></tr>`;
     } else {
       dewaIncomes.forEach(inc => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${inc.source}</strong><br><small style="color:var(--text-muted);">${inc.notes || '-'}</small></td>
           <td><span class="badge-tag">${inc.date || '-'}</span></td>
-          <td style="font-weight: 700; color: var(--color-dewa);">${window.formatRupiah(inc.amount)}</td>
+          <td style="font-weight: 800; color: var(--color-dewa);">${window.formatRupiah(inc.amount)}</td>
           <td style="text-align: right;">
             <button class="btn btn-secondary btn-sm delete-inc-btn" data-id="${inc.id}">🗑️</button>
           </td>
@@ -214,14 +236,14 @@ document.addEventListener('DOMContentLoaded', () => {
     ayuIncomeTbody.innerHTML = '';
     const ayuIncomes = (month.incomes || []).filter(i => i.person === 'ayu');
     if (ayuIncomes.length === 0) {
-      ayuIncomeTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Belum ada catatan pemasukan Ayu</td></tr>`;
+      ayuIncomeTbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted); font-weight:600;">Belum ada catatan rezeki Ayu</td></tr>`;
     } else {
       ayuIncomes.forEach(inc => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${inc.source}</strong><br><small style="color:var(--text-muted);">${inc.notes || '-'}</small></td>
           <td><span class="badge-tag">${inc.date || '-'}</span></td>
-          <td style="font-weight: 700; color: var(--color-ayu);">${window.formatRupiah(inc.amount)}</td>
+          <td style="font-weight: 800; color: var(--color-ayu);">${window.formatRupiah(inc.amount)}</td>
           <td style="text-align: right;">
             <button class="btn btn-secondary btn-sm delete-inc-btn" data-id="${inc.id}">🗑️</button>
           </td>
@@ -235,12 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
     expenseTbody.innerHTML = '';
     const expenses = month.expenses || [];
     if (expenses.length === 0) {
-      expenseTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Belum ada catatan pengeluaran bulan ini</td></tr>`;
+      expenseTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); font-weight:600;">Belum ada catatan belanja bulan ini~</td></tr>`;
     } else {
       expenses.forEach(exp => {
-        let paidBadge = '<span class="badge-persona badge-bareng">Bareng 💜</span>';
-        if (exp.paidBy === 'dewa') paidBadge = '<span class="badge-persona badge-dewa">Dewa 💙</span>';
-        else if (exp.paidBy === 'ayu') paidBadge = '<span class="badge-persona badge-ayu">Ayu 💖</span>';
+        let paidBadge = '<span class="badge-persona badge-bareng">🐾 Bareng</span>';
+        if (exp.paidBy === 'dewa') paidBadge = '<span class="badge-persona badge-dewa">🐻 Dewa</span>';
+        else if (exp.paidBy === 'ayu') paidBadge = '<span class="badge-persona badge-ayu">🐰 Ayu</span>';
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -248,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><span class="badge-tag">${exp.category}</span></td>
           <td><span class="badge-tag">${exp.date || '-'}</span></td>
           <td>${paidBadge}</td>
-          <td style="font-weight: 700; color: var(--color-danger);">${window.formatRupiah(exp.amount)}</td>
+          <td style="font-weight: 800; color: var(--color-danger);">${window.formatRupiah(exp.amount)}</td>
           <td style="text-align: right;">
             <button class="btn btn-secondary btn-sm delete-exp-btn" data-id="${exp.id}">🗑️</button>
           </td>
@@ -264,9 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.delete-inc-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.getAttribute('data-id');
-        if (confirm('Hapus item pemasukan ini?')) {
+        if (confirm('Hapus item rezeki ini?')) {
           window.appState.deleteIncome(id);
-          showToast('Pemasukan berhasil dihapus');
+          showToast('Catatan rezeki dihapus 🗑️', '🌸');
           renderAll();
         }
       });
@@ -275,16 +297,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.delete-exp-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.getAttribute('data-id');
-        if (confirm('Hapus item pengeluaran ini?')) {
+        if (confirm('Hapus item belanja ini?')) {
           window.appState.deleteExpense(id);
-          showToast('Pengeluaran berhasil dihapus');
+          showToast('Catatan belanja dihapus 🗑️', '🌸');
           renderAll();
         }
       });
     });
   }
 
-  // Render Savings Goals (Enhanced with Tabungan Per Orang)
+  // Render Savings Goals (Cute Tabungan Per Orang)
   function renderSavingsGoals(containerId, allowActions = true) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -292,38 +314,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const summary = window.appState.getSavingsSummary();
 
-    // Render Summary Banner on full finance tab
     if (allowActions) {
       const summaryBanner = document.createElement('div');
-      summaryBanner.style.cssText = 'background: var(--bg-subtle); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 0.5rem; text-align: center; border: 1px solid var(--border-color);';
+      summaryBanner.style.cssText = 'background: var(--bg-subtle); border-radius: var(--radius-lg); padding: 0.95rem 1.25rem; margin-bottom: 1.15rem; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 0.75rem; text-align: center; border: 2px dashed var(--border-color); box-shadow: var(--shadow-sm);';
       summaryBanner.innerHTML = `
         <div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">TABUNGAN BERSAMA 💜</div>
-          <div style="font-size: 0.95rem; font-weight: 800; color: #7c3aed;">${window.formatRupiah(summary.barengCollected)}</div>
+          <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 800;">CELENGAN BERSAMA 💜</div>
+          <div style="font-size: 1.05rem; font-weight: 900; color: #9333ea;">${window.formatRupiah(summary.barengCollected)}</div>
         </div>
         <div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">TABUNGAN DEWA 💙</div>
-          <div style="font-size: 0.95rem; font-weight: 800; color: var(--color-dewa);">${window.formatRupiah(summary.dewaCollected)}</div>
+          <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 800;">TABUNGAN DEWA 💙</div>
+          <div style="font-size: 1.05rem; font-weight: 900; color: var(--color-dewa);">${window.formatRupiah(summary.dewaCollected)}</div>
         </div>
         <div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">TABUNGAN AYU 💖</div>
-          <div style="font-size: 0.95rem; font-weight: 800; color: var(--color-ayu);">${window.formatRupiah(summary.ayuCollected)}</div>
+          <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 800;">TABUNGAN AYU 💖</div>
+          <div style="font-size: 1.05rem; font-weight: 900; color: var(--color-ayu);">${window.formatRupiah(summary.ayuCollected)}</div>
         </div>
         <div>
-          <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">TOTAL AKUMULASI</div>
-          <div style="font-size: 0.95rem; font-weight: 800; color: #10b981;">${window.formatRupiah(summary.totalCollected)}</div>
+          <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 800;">TOTAL AKUMULASI ✨</div>
+          <div style="font-size: 1.05rem; font-weight: 900; color: #10b981;">${window.formatRupiah(summary.totalCollected)}</div>
         </div>
       `;
       container.appendChild(summaryBanner);
 
-      // Filter pills for Tabungan (Semua | Bersama 💜 | Dewa 💙 | Ayu 💖)
       const filterPills = document.createElement('div');
-      filterPills.style.cssText = 'display: flex; gap: 0.35rem; margin-bottom: 0.85rem; flex-wrap: wrap;';
+      filterPills.style.cssText = 'display: flex; gap: 0.45rem; margin-bottom: 1rem; flex-wrap: wrap;';
       filterPills.innerHTML = `
-        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'all' ? 'active btn-primary' : 'btn-secondary'}" data-filter="all">Semua Tabungan</button>
-        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'bareng' ? 'active btn-primary' : 'btn-secondary'}" data-filter="bareng">Bersama 💜</button>
-        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'dewa' ? 'active btn-primary' : 'btn-secondary'}" data-filter="dewa">Pribadi Dewa 💙</button>
-        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'ayu' ? 'active btn-primary' : 'btn-secondary'}" data-filter="ayu">Pribadi Ayu 💖</button>
+        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'all' ? 'active btn-primary' : 'btn-secondary'}" data-filter="all">Semua Celengan 🍯</button>
+        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'bareng' ? 'active btn-primary' : 'btn-secondary'}" data-filter="bareng">🐾 Bersama</button>
+        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'dewa' ? 'active btn-primary' : 'btn-secondary'}" data-filter="dewa">🐻 Dewa</button>
+        <button class="btn btn-sm savings-filter-btn ${currentSavingsFilter === 'ayu' ? 'active btn-primary' : 'btn-secondary'}" data-filter="ayu">🐰 Ayu</button>
       `;
       container.appendChild(filterPills);
 
@@ -338,8 +358,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const goals = window.appState.getSavingsGoals(allowActions ? currentSavingsFilter : 'all');
     if (goals.length === 0) {
       const emptyMsg = document.createElement('p');
-      emptyMsg.style.cssText = 'color: var(--text-muted); font-size: 0.875rem; text-align: center; padding: 1rem;';
-      emptyMsg.textContent = 'Belum ada target impian pada kategori ini.';
+      emptyMsg.style.cssText = 'color: var(--text-muted); font-size: 0.9rem; font-weight: 700; text-align: center; padding: 1.5rem;';
+      emptyMsg.textContent = '🌸 Belum ada celengan impian pada kategori ini~';
       container.appendChild(emptyMsg);
       return;
     }
@@ -348,16 +368,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const pct = goal.target > 0 ? Math.min(100, Math.round((goal.collected / goal.target) * 100)) : 0;
       const owner = goal.owner || 'bareng';
 
-      let ownerBadge = '<span class="badge-persona badge-bareng" style="font-size:0.7rem;">Bersama 💜</span>';
+      let ownerBadge = '<span class="badge-persona badge-bareng" style="font-size:0.75rem;">🐾 Bersama</span>';
       let fillClass = 'fill-bareng';
-      let accentColor = '#7c3aed';
+      let accentColor = '#9333ea';
 
       if (owner === 'dewa') {
-        ownerBadge = '<span class="badge-persona badge-dewa" style="font-size:0.7rem;">Pribadi Dewa 💙</span>';
+        ownerBadge = '<span class="badge-persona badge-dewa" style="font-size:0.75rem;">🐻 Dewa</span>';
         fillClass = 'fill-dewa';
         accentColor = 'var(--color-dewa)';
       } else if (owner === 'ayu') {
-        ownerBadge = '<span class="badge-persona badge-ayu" style="font-size:0.7rem;">Pribadi Ayu 💖</span>';
+        ownerBadge = '<span class="badge-persona badge-ayu" style="font-size:0.75rem;">🐰 Ayu</span>';
         fillClass = 'fill-ayu';
         accentColor = 'var(--color-ayu)';
       }
@@ -368,9 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
       let actionButtons = '';
       if (allowActions) {
         actionButtons = `
-          <div style="display: flex; gap: 0.4rem; margin-top: 0.65rem; flex-wrap: wrap;">
-            <button class="btn btn-secondary btn-sm add-fund-btn" data-id="${goal.id}" data-amount="500000">+ Rp 500rb</button>
-            <button class="btn btn-secondary btn-sm add-fund-btn" data-id="${goal.id}" data-amount="1000000">+ Rp 1 Jt</button>
+          <div style="display: flex; gap: 0.45rem; margin-top: 0.75rem; flex-wrap: wrap;">
+            <button class="btn btn-secondary btn-sm add-fund-btn" data-id="${goal.id}" data-amount="500000">+ Rp 500rb 🍯</button>
+            <button class="btn btn-secondary btn-sm add-fund-btn" data-id="${goal.id}" data-amount="1000000">+ Rp 1 Jt ✨</button>
             <button class="btn btn-secondary btn-sm custom-fund-btn" data-id="${goal.id}">+ Nominal Lain</button>
             <button class="btn btn-secondary btn-sm delete-goal-btn" data-id="${goal.id}" style="margin-left:auto;">🗑️</button>
           </div>
@@ -378,18 +398,18 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       card.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <strong style="font-size: 0.95rem; color: var(--text-main);">${goal.title}</strong>
+            <strong style="font-size: 1rem; font-weight: 800; color: var(--text-main);">${goal.title}</strong>
             ${ownerBadge}
           </div>
-          <span style="font-weight: 700; color: ${accentColor}; font-size: 0.9rem;">${pct}%</span>
+          <span style="font-weight: 900; color: ${accentColor}; font-size: 0.95rem;">${pct}%</span>
         </div>
         <div class="progress-bar-wrapper">
           <div class="progress-bar-fill ${fillClass}" style="width: ${pct}%;"></div>
         </div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.35rem;">
-          <span>Terkumpul: <strong style="color:var(--text-main);">${window.formatRupiah(goal.collected)}</strong></span>
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-top: 0.45rem;">
+          <span>Terkumpul: <strong style="color:var(--text-main); font-weight: 800;">${window.formatRupiah(goal.collected)}</strong></span>
           <span>Target: <strong>${window.formatRupiah(goal.target)}</strong></span>
         </div>
         ${actionButtons}
@@ -403,7 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const id = e.currentTarget.getAttribute('data-id');
           const amt = Number(e.currentTarget.getAttribute('data-amount'));
           window.appState.updateSavingsGoal(id, amt);
-          showToast(`Tabungan bertambah ${window.formatRupiah(amt)}! 💰`);
+          showToast(`Celengan bertambah ${window.formatRupiah(amt)}! Makin dekat impian 🍯✨`, '🎉');
           renderAll();
         });
       });
@@ -415,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (input && !isNaN(input)) {
             const amt = Number(input);
             window.appState.updateSavingsGoal(id, amt);
-            showToast(`Tabungan bertambah ${window.formatRupiah(amt)}! 🎉`);
+            showToast(`Celengan bertambah ${window.formatRupiah(amt)}! Hore~ 🍯`, '💖');
             renderAll();
           }
         });
@@ -424,9 +444,9 @@ document.addEventListener('DOMContentLoaded', () => {
       container.querySelectorAll('.delete-goal-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const id = e.currentTarget.getAttribute('data-id');
-          if (confirm('Hapus target tabungan ini?')) {
+          if (confirm('Hapus target celengan ini?')) {
             window.appState.deleteSavingsGoal(id);
-            showToast('Target tabungan dihapus');
+            showToast('Target celengan dihapus', '🗑️');
             renderAll();
           }
         });
@@ -466,26 +486,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (filtered.length === 0) {
-      listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.875rem;">Belum ada jadwal yang sesuai.</p>`;
+      listContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem; font-weight:700; text-align:center; padding:1rem;">🌸 Belum ada agenda kencan atau jadwal kegiatan~</p>`;
       return;
     }
 
     filtered.forEach(sch => {
-      let badge = '<span class="badge-persona badge-bareng">Bareng 💜</span>';
-      if (sch.person === 'dewa') badge = '<span class="badge-persona badge-dewa">Dewa 💙</span>';
-      else if (sch.person === 'ayu') badge = '<span class="badge-persona badge-ayu">Ayu 💖</span>';
+      let badge = '<span class="badge-persona badge-bareng">🐾 Bareng</span>';
+      if (sch.person === 'dewa') badge = '<span class="badge-persona badge-dewa">🐻 Dewa</span>';
+      else if (sch.person === 'ayu') badge = '<span class="badge-persona badge-ayu">🐰 Ayu</span>';
 
       const card = document.createElement('div');
       card.className = 'card';
-      card.style.marginBottom = '0.75rem';
-      card.style.padding = '0.85rem 1rem';
+      card.style.marginBottom = '0.85rem';
+      card.style.padding = '0.95rem 1.15rem';
       card.innerHTML = `
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
           <div>
-            <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem;">${sch.title}</div>
-            <div style="font-size: 0.8125rem; color: var(--text-muted); display:flex; gap:0.75rem; flex-wrap:wrap;">
+            <div style="font-weight: 800; font-size: 0.985rem; margin-bottom: 0.25rem;">${sch.title}</div>
+            <div style="font-size: 0.825rem; font-weight:600; color: var(--text-muted); display:flex; gap:0.75rem; flex-wrap:wrap;">
               <span>📅 ${sch.date}</span>
-              <span>⏰ ${sch.time || 'Waktu fleksibel'}</span>
+              <span>⏰ ${sch.time || 'Fleksibel'}</span>
               <span>📍 ${sch.location || '-'}</span>
               <span class="badge-tag">${sch.category}</span>
             </div>
@@ -504,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = e.currentTarget.getAttribute('data-id');
         if (confirm('Hapus agenda jadwal ini?')) {
           window.appState.deleteSchedule(id);
-          showToast('Jadwal dihapus');
+          showToast('Jadwal dihapus 🗑️', '🌸');
           renderAll();
         }
       });
@@ -526,18 +546,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const doneCount = todos.filter(t => t.status === 'done').length;
-    document.getElementById('todo-summary-count').textContent = `${doneCount} dari ${todos.length} selesai`;
+    document.getElementById('todo-summary-count').textContent = `${doneCount} dari ${todos.length} misi selesai ✨`;
 
     if (filtered.length === 0) {
-      container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:2rem;">Belum ada to-do list pada filter ini.</p>`;
+      container.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:2rem; font-weight:700;">🌸 Belum ada misi pada kategori ini~</p>`;
       return;
     }
 
     filtered.forEach(todo => {
       const isDone = todo.status === 'done';
-      let assigneeBadge = '<span class="badge-persona badge-bareng">Bareng 💜</span>';
-      if (todo.assignee === 'dewa') assigneeBadge = '<span class="badge-persona badge-dewa">Dewa 💙</span>';
-      else if (todo.assignee === 'ayu') assigneeBadge = '<span class="badge-persona badge-ayu">Ayu 💖</span>';
+      let assigneeBadge = '<span class="badge-persona badge-bareng">🐾 Bareng</span>';
+      if (todo.assignee === 'dewa') assigneeBadge = '<span class="badge-persona badge-dewa">🐻 Dewa</span>';
+      else if (todo.assignee === 'ayu') assigneeBadge = '<span class="badge-persona badge-ayu">🐰 Ayu</span>';
 
       const priorityBadge = `<span class="badge-tag badge-priority-${todo.priority || 'sedang'}">Prioritas: ${todo.priority || 'sedang'}</span>`;
 
@@ -566,7 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = e.currentTarget.getAttribute('data-id');
         const res = window.appState.toggleTodoStatus(id);
         if (res && res.status === 'done') {
-          showToast(`Hebat! Tugas selesai: "${res.title}" 🎉`, '✅');
+          showToast(`Yeay! Misi selesai: "${res.title}" 🎉 Dewa & Ayu kompak banget! 💖`, '🎀');
         }
         renderAll();
       });
@@ -577,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = e.currentTarget.getAttribute('data-id');
         if (confirm('Hapus to-do ini?')) {
           window.appState.deleteTodo(id);
-          showToast('To-do list dihapus');
+          showToast('To-do list dihapus 🗑️', '🌸');
           renderAll();
         }
       });
@@ -602,14 +622,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const dosList = document.getElementById('dos-items-list');
     dosList.innerHTML = '';
     dnd.dos.forEach(item => {
-      let badge = '<span class="badge-persona badge-bareng" style="font-size:0.65rem;">Bareng 💜</span>';
-      if (item.addedBy === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.65rem;">Dewa 💙</span>';
-      else if (item.addedBy === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.65rem;">Ayu 💖</span>';
+      let badge = '<span class="badge-persona badge-bareng" style="font-size:0.7rem;">🐾 Bareng</span>';
+      if (item.addedBy === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.7rem;">🐻 Dewa</span>';
+      else if (item.addedBy === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.7rem;">🐰 Ayu</span>';
 
       const div = document.createElement('div');
       div.className = 'dnd-item dnd-item-do';
       div.innerHTML = `
-        <span style="font-size: 1.15rem; color: #10b981; margin-top: 1px;">✅</span>
+        <span style="font-size: 1.25rem; color: #10b981; margin-top: 1px;">🎀</span>
         <div class="dnd-item-content">
           <div class="dnd-item-text">${item.text}</div>
           <div class="dnd-item-meta">
@@ -626,14 +646,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const dontsList = document.getElementById('donts-items-list');
     dontsList.innerHTML = '';
     dnd.donts.forEach(item => {
-      let badge = '<span class="badge-persona badge-bareng" style="font-size:0.65rem;">Bareng 💜</span>';
-      if (item.addedBy === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.65rem;">Dewa 💙</span>';
-      else if (item.addedBy === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.65rem;">Ayu 💖</span>';
+      let badge = '<span class="badge-persona badge-bareng" style="font-size:0.7rem;">🐾 Bareng</span>';
+      if (item.addedBy === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.7rem;">🐻 Dewa</span>';
+      else if (item.addedBy === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.7rem;">🐰 Ayu</span>';
 
       const div = document.createElement('div');
       div.className = 'dnd-item dnd-item-dont';
       div.innerHTML = `
-        <span style="font-size: 1.15rem; color: #ef4444; margin-top: 1px;">❌</span>
+        <span style="font-size: 1.25rem; color: #f43f5e; margin-top: 1px;">🚫</span>
         <div class="dnd-item-content">
           <div class="dnd-item-text">${item.text}</div>
           <div class="dnd-item-meta">
@@ -650,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.getAttribute('data-id');
         window.appState.deleteDo(id);
-        showToast('Do disepakati dihapus');
+        showToast('Resep bahagia dihapus', '🌸');
         renderNotesAndDnd();
       });
     });
@@ -659,7 +679,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.getAttribute('data-id');
         window.appState.deleteDont(id);
-        showToast('Don\'t disepakati dihapus');
+        showToast('Pantangan dihapus', '🌸');
         renderNotesAndDnd();
       });
     });
@@ -668,12 +688,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const notesContainer = document.getElementById('shared-notes-container');
     notesContainer.innerHTML = '';
     if (notes.length === 0) {
-      notesContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.875rem;">Belum ada catatan bersama. Klik tombol "+ Tambah Catatan" untuk mulai menulis ide atau memo!</p>`;
+      notesContainer.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem; font-weight:700;">🌸 Belum ada memo bersama. Klik tombol "+ Memo Baru 🍓" untuk mulai menulis surat manis!</p>`;
     } else {
       notes.forEach(note => {
-        let badge = '<span class="badge-persona badge-bareng" style="font-size:0.7rem;">Bareng 💜</span>';
-        if (note.author === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.7rem;">Dewa 💙</span>';
-        else if (note.author === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.7rem;">Ayu 💖</span>';
+        let badge = '<span class="badge-persona badge-bareng" style="font-size:0.725rem;">🐾 Bareng</span>';
+        if (note.author === 'dewa') badge = '<span class="badge-persona badge-dewa" style="font-size:0.725rem;">🐻 Dewa</span>';
+        else if (note.author === 'ayu') badge = '<span class="badge-persona badge-ayu" style="font-size:0.725rem;">🐰 Ayu</span>';
 
         const card = document.createElement('div');
         card.className = 'note-card';
@@ -691,7 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
               ${badge}
               <span class="badge-tag">${note.category}</span>
             </div>
-            <button class="btn btn-secondary btn-sm delete-note-btn" data-id="${note.id}" style="background:rgba(255,255,255,0.7); padding:0.2rem 0.45rem;">🗑️</button>
+            <button class="btn btn-secondary btn-sm delete-note-btn" data-id="${note.id}" style="background:rgba(255,255,255,0.85); padding:0.25rem 0.55rem;">🗑️</button>
           </div>
         `;
         notesContainer.appendChild(card);
@@ -709,9 +729,9 @@ document.addEventListener('DOMContentLoaded', () => {
     notesContainer.querySelectorAll('.delete-note-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = e.currentTarget.getAttribute('data-id');
-        if (confirm('Hapus catatan ini?')) {
+        if (confirm('Hapus memo ini?')) {
           window.appState.deleteNote(id);
-          showToast('Catatan dihapus');
+          showToast('Memo dihapus', '🗑️');
           renderNotesAndDnd();
         }
       });
@@ -744,7 +764,7 @@ document.addEventListener('DOMContentLoaded', () => {
       span.addEventListener('click', () => {
         window.appState.updateReview({ happinessRating: i });
         renderStarRating(i);
-        showToast(`Rating kebahagiaan disimpan: ${i}/5 bintang! ⭐`);
+        showToast(`Tingkat kebahagiaan disimpan: ${i}/5 bintang! 💖`, '⭐');
       });
       starContainer.appendChild(span);
     }
@@ -759,18 +779,18 @@ document.addEventListener('DOMContentLoaded', () => {
       notes: document.getElementById('rev-notes').value.trim()
     };
     window.appState.updateReview(reviewData);
-    showToast('Refleksi & evaluasi bulanan berhasil disimpan! 💖', '📝');
+    showToast('Refleksi & surat cinta bulanan berhasil disimpan! 💖✨', '💌');
   });
 
   function renderHabitMatrix() {
     const matrixContainer = document.getElementById('habit-matrix-container');
     const habits = window.appState.getHabits();
     const totalDaysToShow = 14; 
-    let tableHeadHtml = `<tr><th>Kebiasaan & Target</th>`;
+    let tableHeadHtml = `<tr><th>Kebiasaan Sehat</th>`;
     for (let d = 1; d <= totalDaysToShow; d++) {
       tableHeadHtml += `<th style="width: 32px;">Tgl ${d}</th>`;
     }
-    tableHeadHtml += `<th style="width: 70px;">Progress</th><th style="width: 50px;">Aksi</th></tr>`;
+    tableHeadHtml += `<th style="width: 75px;">Progress</th><th style="width: 50px;">Aksi</th></tr>`;
 
     let tableBodyHtml = '';
     habits.forEach(h => {
@@ -791,11 +811,11 @@ document.addEventListener('DOMContentLoaded', () => {
       tableBodyHtml += `
         <tr>
           <td>
-            <div style="font-weight: 600; font-size: 0.8125rem;">${h.name}</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted);">${h.assignee === 'bareng' ? 'Bareng 💜' : h.assignee === 'dewa' ? 'Dewa 💙' : 'Ayu 💖'}</div>
+            <div style="font-weight: 800; font-size: 0.85rem;">${h.name}</div>
+            <div style="font-size: 0.725rem; font-weight:700; color: var(--text-muted);">${h.assignee === 'bareng' ? '🐾 Bareng' : h.assignee === 'dewa' ? '🐻 Dewa' : '🐰 Ayu'}</div>
           </td>
           ${checksHtml}
-          <td><strong style="color: #10b981;">${pct}%</strong></td>
+          <td><strong style="color: #10b981; font-weight: 900;">${pct}%</strong></td>
           <td>
             <button class="btn btn-secondary btn-sm delete-habit-btn" data-id="${h.id}" style="padding: 0.2rem 0.4rem;">🗑️</button>
           </td>
@@ -816,7 +836,10 @@ document.addEventListener('DOMContentLoaded', () => {
       chk.addEventListener('change', (e) => {
         const habitId = e.currentTarget.getAttribute('data-habit-id');
         const day = e.currentTarget.getAttribute('data-day');
-        window.appState.toggleHabitDay(habitId, day);
+        const isDone = window.appState.toggleHabitDay(habitId, day);
+        if (isDone) {
+          showToast('Yeay! Satu kebiasaan sehat terlaksana hari ini~ 🌸', '✨');
+        }
         renderHabitMatrix();
         renderOverview();
       });
@@ -827,7 +850,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = e.currentTarget.getAttribute('data-id');
         if (confirm('Hapus kebiasaan ini?')) {
           window.appState.deleteHabit(id);
-          showToast('Kebiasaan dihapus');
+          showToast('Kebiasaan dihapus', '🌸');
           renderHabitMatrix();
           renderOverview();
         }
@@ -877,7 +900,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addIncome(item);
     closeModal('modal-add-income');
     e.target.reset();
-    showToast(`Pemasukan ${window.formatRupiah(item.amount)} berhasil ditambahkan! 💵`);
+    showToast(`Rezeki ${window.formatRupiah(item.amount)} berhasil ditambahkan! 🍯✨`, '💵');
     renderAll();
   });
 
@@ -895,7 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addExpense(item);
     closeModal('modal-add-expense');
     e.target.reset();
-    showToast(`Pengeluaran ${window.formatRupiah(item.amount)} dicatat!`);
+    showToast(`Catatan belanja ${window.formatRupiah(item.amount)} disimpan! 🛍️`, '🍓');
     renderAll();
   });
 
@@ -913,7 +936,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addSchedule(item);
     closeModal('modal-add-schedule');
     e.target.reset();
-    showToast('Jadwal baru berhasil diagendakan! 📅');
+    showToast('Jadwal baru berhasil diagendakan! Jangan lupa ya~ 🌸', '📅');
     renderAll();
   });
 
@@ -931,11 +954,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addTodo(item);
     closeModal('modal-add-todo');
     e.target.reset();
-    showToast('To-Do List baru ditambahkan! ✅');
+    showToast('Misi baru ditambahkan! Semangat berdua! 🎀', '🐰');
     renderAll();
   });
 
-  // Modal: Add Savings Goal (Enhanced with Owner: Dewa / Ayu / Bareng)
+  // Modal: Add Savings Goal
   document.getElementById('form-add-goal').addEventListener('submit', (e) => {
     e.preventDefault();
     const item = {
@@ -949,7 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addSavingsGoal(item);
     closeModal('modal-add-goal');
     e.target.reset();
-    showToast('Target impian tabungan ditambahkan! 🌟');
+    showToast('Celengan impian baru ditambahkan! 🍯✨', '🌟');
     renderAll();
   });
 
@@ -963,7 +986,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addHabit(item);
     closeModal('modal-add-habit');
     e.target.reset();
-    showToast('Kebiasaan baru ditambahkan ke tracker! 🏃');
+    showToast('Kebiasaan sehat baru ditambahkan ke tracker! 🌷', '🏃');
     renderAll();
   });
 
@@ -976,7 +999,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addDo(text, category, addedBy);
     closeModal('modal-add-do');
     e.target.reset();
-    showToast('Prinsip DO\'s baru ditambahkan! ✅');
+    showToast('Resep bahagia baru disepakati bersama! 🌸✨', '🎀');
     renderNotesAndDnd();
   });
 
@@ -989,7 +1012,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addDont(text, category, addedBy);
     closeModal('modal-add-dont');
     e.target.reset();
-    showToast('Prinsip DON\'Ts baru ditambahkan! ❌');
+    showToast('Pantangan baru disepakati bersama! 🚫', '💕');
     renderNotesAndDnd();
   });
 
@@ -1004,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.appState.addNote(title, content, category, author, color);
     closeModal('modal-add-note');
     e.target.reset();
-    showToast('Catatan bersama baru disimpan! 📝');
+    showToast('Memo manis berhasil ditempel! 💌✨', '🍓');
     renderNotesAndDnd();
   });
 
@@ -1014,7 +1037,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileAccessBtn.addEventListener('click', async () => {
       openModal('modal-mobile-access');
       const qrContainer = document.getElementById('qr-code-display');
-      qrContainer.innerHTML = '<p style="color:var(--text-muted);">Memeriksa koneksi jaringan...</p>';
+      qrContainer.innerHTML = '<p style="color:var(--text-muted); font-weight:700;">Memeriksa koneksi jaringan...</p>';
 
       let targetUrl = window.location.origin;
       try {
@@ -1035,14 +1058,14 @@ document.addEventListener('DOMContentLoaded', () => {
         qrContainer.innerHTML = `
           <div style="padding:1rem; text-align:center;">
             <p>Buka di HP melalui browser:</p>
-            <strong style="font-size:1.1rem; color:#7c3aed;">${targetUrl}</strong>
+            <strong style="font-size:1.1rem; color:#f43f5e;">${targetUrl}</strong>
           </div>
         `;
       }
     });
   }
 
-  // 13. Remote Access Guide Modal (Different Wi-Fi / Long Distance)
+  // 13. Remote Access Guide Modal
   const remoteAccessBtn = document.getElementById('btn-remote-access');
   if (remoteAccessBtn) {
     remoteAccessBtn.addEventListener('click', () => {
@@ -1063,11 +1086,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(window.appState.exportJSON());
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `laporan_dewa_ayu_${window.appState.getCurrentMonthKey()}.json`);
+    downloadAnchor.setAttribute("download", `laporan_manis_dewa_ayu_${window.appState.getCurrentMonthKey()}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    showToast('Data berhasil diekspor ke file JSON! 💾');
+    showToast('Data manis berhasil diekspor ke file JSON! 💾', '🌸');
   });
 
   document.getElementById('btn-import-trigger').addEventListener('click', () => {
@@ -1082,7 +1105,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const content = event.target.result;
       const success = window.appState.importJSON(content);
       if (success) {
-        showToast('Data berhasil diimpor! 🚀');
+        showToast('Data berhasil diimpor! Hore~ 🚀', '✨');
         renderAll();
       } else {
         alert('File JSON tidak valid atau format salah.');
@@ -1099,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btn-reset-data').addEventListener('click', () => {
     if (confirm('Kembalikan ke data awal bawaan Dewa & Ayu? Perubahan yang belum diekspor akan hilang.')) {
       window.appState.resetToDefault();
-      showToast('Data berhasil direset ke contoh default.');
+      showToast('Data berhasil direset ke contoh default 🌸', '✨');
       renderAll();
     }
   });

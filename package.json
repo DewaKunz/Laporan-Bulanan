@@ -1,15 +1,16 @@
 {
   "name": "dashboard-dewa-ayu",
-  "version": "1.1.0",
-  "description": "Dashboard Progress Bulanan Dewa & Ayu - Keuangan, Jadwal, To-Do List, Catatan & Do's/Don'ts, Tabungan Per Orang & Sinkronisasi Real-Time",
+  "version": "1.2.0",
+  "description": "Dashboard Lucu & Manis Progress Bulanan Dewa & Ayu - Vercel Ready",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'Build OK for Vercel'",
     "start": "node server.js",
     "serve": "node server.js",
     "share": "npx localtunnel --port 3000",
     "tunnel": "npx cloudflared tunnel --url http://localhost:3000"
   },
-  "keywords": ["dashboard", "couple", "monthly-report", "finance", "todo", "calendar", "notes"],
+  "keywords": ["dashboard", "couple", "monthly-report", "finance", "todo", "calendar", "notes", "cute", "vercel"],
   "author": "Dewa & Ayu",
   "license": "MIT"
 }

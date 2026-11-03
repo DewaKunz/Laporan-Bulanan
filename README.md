@@ -1,103 +1,55 @@
-# 💑 Dashboard Dewa & Ayu - Laporan, Keuangan & Sinergi Progress
+# 🌸 Dewa & Ayu's Sweet Space 🐻💖🐰
+### Dashboard & Laporan Bulanan Lucu untuk Pasangan
 
-Aplikasi web interaktif untuk mencatat, merencanakan, dan mengevaluasi seluruh aspek perkembangan bulanan **Dewa & Ayu**. Dilengkapi dengan fitur **sinkronisasi otomatis antar-perangkat (Laptop & HP Pasangan)**, pencatatan keuangan bersama, jadwal kegiatan masing-masing, to-do list kolaborasi, habit tracker harian, serta **kesepakatan Do's & Don'ts dan Catatan Bersama**.
-
----
-
-## 📱 Akses Bersama di HP dan Laptop (Multi-Device Sync)
-
-Aplikasi ini dapat dibuka secara bersamaan di **Laptop Dewa** dan **HP Ayu** (atau sebaliknya) dalam jaringan Wi-Fi yang sama:
-
-1. **Di Laptop**:
-   Buka browser di: [http://localhost:3000](http://localhost:3000)
-2. **Di HP Pasangan (iPhone / Android)**:
-   - Hubungkan HP ke Wi-Fi yang sama.
-   - Buka browser HP di: **http://192.168.1.6:3000**
-   - Atau klik tombol **`📱 Buka di HP`** di pojok kanan atas dashboard untuk menampilkan **QR Code**, lalu arahkan kamera HP ke layar!
-3. **Sinkronisasi Real-Time**:
-   - Jika Dewa menginput pengeluaran di laptop, dalam hitungan detik Ayu akan langsung melihat update-nya di HP.
-   - Jika Ayu menginput jadwal atau to-do di HP, laptop Dewa otomatis tersinkronisasi tanpa perlu me-refresh halaman!
+Aplikasi web interaktif dengan **tema super lucu, manis, dan estetik pastel** untuk mencatat keuangan berdua, celengan impian (bersama & pribadi), jadwal kencan, to-do list misi cinta, serta resep bahagia (Do's & Don'ts).
 
 ---
 
-## 🌟 Fitur-Fitur Lengkap
+## 🚀 Mengapa di Vercel Sempat 404 & Bagaimana Cara Mengatasinya?
 
-### 1. 💰 Pemasukan & Keuangan Bulanan
-- **Input Pemasukan Terpisah**:
-  - Pemasukan **Dewa 💙** (Gaji, Freelance Web, Bonus, dll.)
-  - Pemasukan **Ayu 💖** (Gaji, Usaha Kerajinan/Hampers, Side Income, dll.)
-- **Sinergi Finansial Visual**:
-  - Grafik perbandingan kontribusi pendapatan Dewa vs Ayu.
-  - Sisa Tabungan Bersih & Rasio Tabungan (*Savings Rate %*).
-- **Catatan Pengeluaran Bersama**:
-  - Catat belanja bulanan, sewa/tagihan, hiburan/kencan, dan transportasi.
-  - Kategori & tag: *Dibayar oleh: Dewa / Ayu / Bareng 💜*.
-  - Diagram Donat (*Donut Chart SVG*) pengeluaran tanpa ketergantungan internet.
-- **Target Impian Bersama (*Savings Goals*)**:
-  - Progress bar tabungan (💍 Dana Nikah, ✈️ Liburan Akhir Tahun, 🛡️ Dana Darurat).
-  - Tombol instan setor tabungan `+ Rp 500rb`, `+ Rp 1 Jt`, atau nominal kustom.
+### Penyebab 404 di Vercel Sebelumnya:
+1. Vercel secara bawaan adalah platform **Serverless**, bukan server VPS yang menjalankan `node server.js` secara terus-menerus.
+2. Ketika tidak ada file konfigurasi `vercel.json`, Vercel bingung menentukan rute file statis (`index.html`, CSS, JS) dan API, sehingga menampilkan halaman `404: NOT_FOUND`.
 
-### 2. 📝 Kesepakatan Do's & Don'ts dan Catatan Bersama (BARU!)
-- **Prinsip Hubungan & Keuangan (Do's & Don'ts Agreement)**:
-  - ✅ **DO's (Yang Harus / Dianjurkan Dilakukan)**:
-    - *Diskusikan bersama sebelum pengeluaran di atas Rp 500.000*
-    - *Catat setiap pemasukan & pengeluaran setiap malam sebelum tidur*
-    - *Sisihkan tabungan nikah & dana darurat di awal gajian (Pay yourself first)*
-    - *Deep talk & waktu kencan tanpa pegang HP minimal 1x seminggu*
-    - *Saling mengapresiasi dan berterima kasih atas usaha masing-masing*
-    - *Bisa tambah DO's baru kapan saja!*
-  - ❌ **DON'Ts (Yang Dilarang / Dihindari)**:
-    - *Jangan belanja impulsif saat lapar, lelah, atau tergiur diskon kilat (tunggu 24 jam)*
-    - *Jangan memendam uneg-uneg atau masalah keuangan sendirian*
-    - *Jangan memakai uang tabungan darurat untuk hal non-esensial / gengsi*
-    - *Jangan membandingkan kondisi finansial dengan orang lain di media sosial*
-    - *Bisa tambah DON'Ts baru kapan saja!*
-- **Papan Catatan Bebas & Wishlist (Sticky Notes Board)**:
-  - Kartu catatan warna-warni untuk mencatat ide kencan, list belanja dapur, kriteria vendor pernikahan impian, dan memo romantis.
-  - Fitur **Pin ke Atas (📌)** untuk catatan penting.
+### Solusi yang Sudah Diterapkan:
+1. **`vercel.json`**: Menentukan rute statis dan routing serverless otomatis sehingga seluruh URL diarahkan dengan benar ke `index.html`.
+2. **`api/data.js` & `api/network-info.js`**: Serverless function native Vercel untuk sinkronisasi data online.
+3. **`package.json`**: Menambahkan script `"build"` agar Vercel mendeteksi proses build selesai dengan sukses.
 
-### 3. 📅 Jadwal & Kalender Kegiatan Masing-Masing
-- **Kalender Interaktif**:
-  - Grid kalender dengan penanda warna:
-    - 💙 Biru: Kegiatan pribadi Dewa
-    - 💖 Pink: Kegiatan pribadi Ayu
-    - 💜 Ungu: Acara & kencan berdua (Bareng)
-  - **Klik tanggal di kalender** untuk langsung mengisi jadwal pada tanggal tersebut!
-- **Filter Cepat**: Tampilkan jadwal Semua, Dewa saja, Ayu saja, atau Acara Bareng.
-- **Agenda Terdekat**: Daftar kronologis dengan jam, tempat, dan kategori kegiatan.
-
-### 4. ✅ To-Do List Bareng
-- Kolaborasi tugas dengan *Assignee* (Dewa / Ayu / Bareng), prioritas (Tinggi 🔥, Sedang, Rendah), dan batas waktu.
-- Ceklis interaktif dengan efek coret dan status persentase penyelesaian otomatis.
-
-### 5. 🏃‍♂️ Habit Tracker Harian
-- Ceklis disiplin harian (olahraga 30m, minum air 2L, baca buku, skincare, deep talk, catat pengeluaran) dengan persentase konsistensi.
-
-### 6. 🌟 Kilas Balik & Evaluasi Bulanan (Monthly Review)
-- Form refleksi akhir bulan: Momen terbaik, pencapaian terbesar, evaluasi/tantangan, target bulan depan, rating kepuasan (1-5 bintang ⭐), dan pesan cinta.
-
-### 7. 📱 Quick Input Floating Button (Untuk Pengguna HP)
-- Tombol mengambang `+` di layar HP untuk input cepat:
-  - 💵 Pemasukan
-  - 💸 Pengeluaran
-  - 📅 Jadwal
-  - ✅ To-Do
-  - 📝 Catatan / Do's & Don'ts
-
----
-
-## 🚀 Cara Menjalankan
-
-Server lokal telah berjalan di latar belakang. Jika Anda ingin menyalakan ulang kapan saja:
-
+### Langkah untuk Update ke Vercel Anda:
+Cukup jalankan 3 baris perintah ini di Terminal laptop Anda:
 ```bash
-npm start
+git add .
+git commit -m "fix: vercel 404 configuration and cute couple theme"
+git push
 ```
-Atau:
-```bash
-node server.js
-```
+Dalam waktu 1 menit, Vercel akan otomatis me-redeploy dan dashboard langsung bisa diakses online tanpa 404 lagi! ✨
 
-Lalu buka:
-- Di Laptop: **http://localhost:3000**
-- Di HP Pasangan (Wi-Fi sama): **http://192.168.1.6:3000**
+---
+
+## 🎨 Tema Baru yang Super Lucu & Manis (Cute Couple Theme)
+
+* **Nuansa Pastel Manis**: Warna *strawberry milk* pink, *baby blue*, *lavender*, dan *buttercream yellow*.
+* **Karakter Lucu**:
+  * 🐻 **Dewa**: Si Ganteng Beruang (Aksen Baby Blue)
+  * 🐰 **Ayu**: Si Cantik Kelinci (Aksen Strawberry Pink)
+  * 💖 **Detak Jantung Mini**: Animasi detak cinta berdenyut di avatar header.
+* **Love Banner Interaktif**: Kata-kata manis dan motivasi pasangan yang bisa diklik untuk berganti kutipan cinta setiap hari.
+* **Bubbly & Rounded**: Desain serba membulat, bayangan lembut, dan font ramah yang menggemaskan (*Quicksand & Nunito*).
+* **Mode Malam Bintang (Dreamy Midnight Dark)**: Mode gelap bernuansa malam berbintang ungu pastel yang nyaman di mata saat malam hari.
+
+---
+
+## 📱 Fitur-Fitur Utama
+
+1. **Dompet & Rezeki Masuk**: Catatan pemasukan terpisah untuk 🐻 Dewa & 🐰 Ayu.
+2. **Belanja & Jajan 🍓**: Pencatatan pengeluaran dengan tag *Dibayar oleh: Dewa / Ayu / Bareng*.
+3. **Celengan Impian (Bersama & Pribadi) 🍯**:
+   * Tabungan Bersama (Nikah, Liburan, Dana Darurat).
+   * Tabungan Pribadi Dewa (Gadget, Saham/Investasi).
+   * Tabungan Pribadi Ayu (Emas Batangan, Modal Usaha).
+4. **Jadwal & Kencan 📅**: Kalender interaktif dan jadwal kencan romantis.
+5. **Misi Bareng (To-Do List) 🐰**: Checklist tugas kolaboratif dengan status penyelesaian otomatis.
+6. **Resep Bahagia (DO's & DON'Ts) 🎀**: Prinsip cinta dan keuangan yang disepakati bersama.
+7. **Papan Memo Manis 💌**: Sticky notes pastel untuk catatan ide kencan dan surat cinta.
+8. **Kilas Balik & Cinta 🌟**: Refleksi bulanan, habit tracker harian, dan rating kebahagiaan berdua.
