@@ -239,6 +239,9 @@ class StateManager {
 
   // Save and broadcast immediately across all devices with zero delay!
   save(actionMessage = 'mengupdate data') {
+    this.data.lastUpdated = Date.now();
+    this.data.lastAction = actionMessage;
+    this.data.lastModifiedBy = window.authManager ? window.authManager.getCurrentUserId() : 'user';
     this.saveLocal();
     if (window.realtimeSync) {
       window.realtimeSync.broadcastChange(actionMessage);

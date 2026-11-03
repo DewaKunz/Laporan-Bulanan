@@ -83,16 +83,22 @@ const server = http.createServer((req, res) => {
   // API 3: Data retrieval (GET /api/data)
   if (parsedUrl === '/api/data' && req.method === 'GET') {
     fs.readFile(DB_FILE, 'utf8', (err, data) => {
+      const headers = {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      };
       if (err) {
         if (err.code === 'ENOENT') {
-          res.writeHead(200, { 'Content-Type': 'application/json; charset=UTF-8' });
+          res.writeHead(200, headers);
           res.end(JSON.stringify({ initialized: false, data: null }));
         } else {
-          res.writeHead(500, { 'Content-Type': 'application/json; charset=UTF-8' });
+          res.writeHead(500, headers);
           res.end(JSON.stringify({ error: err.message }));
         }
       } else {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=UTF-8' });
+        res.writeHead(200, headers);
         res.end(JSON.stringify({ initialized: true, data: JSON.parse(data) }));
       }
     });

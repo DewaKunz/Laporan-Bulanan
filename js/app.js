@@ -1255,7 +1255,9 @@ document.addEventListener('DOMContentLoaded', () => {
           autoFillActiveUser();
           showToast(`Berhasil masuk sebagai ${res.user.title}! 🌸`, '💖');
           if (window.realtimeSync) {
+            window.realtimeSync.initMQTT();
             window.realtimeSync.initPeerJS();
+            window.realtimeSync.triggerImmediateSync();
           }
         } else {
           const errEl = document.getElementById('login-error-msg');
