@@ -1,16 +1,17 @@
 /**
  * Enhanced State Management with Multi-Device Server Sync (Laptop & HP),
- * Tabungan Per Orang (Dewa, Ayu & Bersama), Do's & Don'ts Agreement, and Shared Notes.
+ * Tabungan Per Orang (Dewa, Ayu & Bersama), Do's & Don'ts Agreement, Shared Notes,
+ * and Instant Zero-Delay Realtime Broadcast!
  */
 
-const STORAGE_KEY = 'dewa_ayu_dashboard_data_v3';
+const STORAGE_KEY = 'dewa_ayu_dashboard_data_v4';
 
 // Default initial state
 const defaultData = {
   currentMonth: '2026-11',
   profiles: {
-    dewa: { name: 'Dewa', role: 'Partner & Tech Enthusiast', color: '#2563eb' },
-    ayu: { name: 'Ayu', role: 'Partner & Creative Soul', color: '#e11d48' }
+    dewa: { name: 'Dewa', role: 'Partner & Tech Enthusiast', color: '#0284c7' },
+    ayu: { name: 'Ayu', role: 'Partner & Creative Soul', color: '#f43f5e' }
   },
   // Tabungan Bersama & Tabungan Pribadi Dewa / Ayu
   savingsGoals: [
@@ -116,7 +117,7 @@ const defaultData = {
       content: '• Minyak zaitun & butter\n• Susu oat & biji kopi arabika\n• Sabun cuci pakaian & pewangi\n• Bumbu dapur (bawang merah, putih, lada)',
       category: 'Belanja',
       author: 'ayu',
-      color: '#fce7f3',
+      color: '#ffe4e9',
       pinned: false,
       updatedAt: '2026-11-02'
     },
@@ -126,21 +127,19 @@ const defaultData = {
       content: '• Konsep: Intimate warm wedding (150-200 pax)\n• Dominasi warna: Sage green & warm ivory\n• Utamakan vendor catering yang rasa masakannya sudah diuji\n• Dokumentasi foto & video bergaya natural candid',
       category: 'Masa Depan',
       author: 'bareng',
-      color: '#e0e7ff',
+      color: '#e0f2fe',
       pinned: true,
       updatedAt: '2026-11-01'
     }
   ],
   months: {
     '2026-11': {
-      // Incomes
       incomes: [
         { id: 'inc-1', person: 'dewa', source: 'Gaji Kantor Utama', amount: 12500000, date: '2026-11-01', notes: 'Transfer gaji awal bulan' },
         { id: 'inc-2', person: 'dewa', source: 'Freelance UI/UX Web', amount: 3800000, date: '2026-11-10', notes: 'Project landing page klien' },
         { id: 'inc-3', person: 'ayu', source: 'Gaji Kantor Utama', amount: 11000000, date: '2026-11-01', notes: 'Gaji bulanan' },
         { id: 'inc-4', person: 'ayu', source: 'Side Business & Crafting', amount: 2600000, date: '2026-11-08', notes: 'Order hampers & souvenir' }
       ],
-      // Shared / Individual Expenses
       expenses: [
         { id: 'exp-1', title: 'Belanja Dapur & Supermarket', category: 'Belanja', amount: 1850000, paidBy: 'bareng', date: '2026-11-02', notes: 'Bahan masakan 2 minggu' },
         { id: 'exp-2', title: 'Sewa Tempat & Listrik + WiFi', category: 'Tagihan', amount: 2400000, paidBy: 'dewa', date: '2026-11-03', notes: 'Indihome & Token listrik' },
@@ -149,7 +148,6 @@ const defaultData = {
         { id: 'exp-5', title: 'Perlengkapan Skincare & Rumah', category: 'Kebutuhan', amount: 620000, paidBy: 'ayu', date: '2026-11-05', notes: 'Restock sabun, shampoo & reed diffuser' },
         { id: 'exp-6', title: 'Alokasi Tabungan Bersama', category: 'Investasi', amount: 5000000, paidBy: 'bareng', date: '2026-11-04', notes: 'Setor ke rekening tabungan bersama' }
       ],
-      // Schedules
       schedules: [
         { id: 'sch-1', title: 'Presentasi Project Akhir Tahun', person: 'dewa', date: '2026-11-04', time: '09:30', location: 'Kantor Dewa', category: 'Kerja' },
         { id: 'sch-2', title: 'Kelas Webinar Digital Marketing', person: 'ayu', date: '2026-11-05', time: '14:00', location: 'Online Zoom', category: 'Belajar' },
@@ -161,7 +159,6 @@ const defaultData = {
         { id: 'sch-8', title: 'Deep Talk & Review Keuangan Bulanan', person: 'bareng', date: '2026-11-20', time: '20:00', location: 'Coffee Shop Favorit', category: 'Evaluasi' },
         { id: 'sch-9', title: 'Short Weekend Staycation', person: 'bareng', date: '2026-11-28', time: '11:00', location: 'Villa Asri', category: 'Liburan' }
       ],
-      // Shared To-Do List
       todos: [
         { id: 'td-1', title: 'Bandingkan paket & paket vendor dekorasi', assignee: 'bareng', priority: 'tinggi', dueDate: '2026-11-18', status: 'in_progress', category: 'Masa Depan' },
         { id: 'td-2', title: 'Bikin itinerary detail liburan akhir tahun', assignee: 'ayu', priority: 'sedang', dueDate: '2026-11-12', status: 'in_progress', category: 'Liburan' },
@@ -170,7 +167,6 @@ const defaultData = {
         { id: 'td-5', title: 'Cek polis asuransi & perpanjangan SIM', assignee: 'dewa', priority: 'sedang', dueDate: '2026-11-22', status: 'todo', category: 'Admin' },
         { id: 'td-6', title: 'Pilih 3 rekomendasi tempat dinner anniversary', assignee: 'ayu', priority: 'tinggi', dueDate: '2026-11-16', status: 'todo', category: 'Kencan' }
       ],
-      // Monthly Review & Reflections
       review: {
         highlight: 'Kencan santai di rooftop sambil membuat roadmap impian bersama 3 tahun ke depan.',
         achievement: 'Pemasukan gabungan bertambah dan target tabungan bulanan 30% tercapai dengan disiplin!',
@@ -179,7 +175,6 @@ const defaultData = {
         happinessRating: 5,
         notes: 'Bulan ini sangat produktif, komunikasi kita makin terbuka dan saling support.'
       },
-      // Habit Tracking
       habits: [
         { id: 'hb-1', name: '🏃‍♂️ Olahraga / Jalan Sehat (Min 30m)', assignee: 'bareng', checks: { 1: true, 2: true, 3: false, 4: true, 5: false, 6: true, 7: true, 8: true } },
         { id: 'hb-2', name: '💧 Minum Air 2L Sehari', assignee: 'bareng', checks: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true, 8: true } },
@@ -194,17 +189,14 @@ const defaultData = {
 
 class StateManager {
   constructor() {
-    this.serverSyncEnabled = false;
-    this.isSyncing = false;
     this.listeners = [];
-
     this.data = this.loadLocal();
+
     if (!this.data.dosAndDonts) this.data.dosAndDonts = JSON.parse(JSON.stringify(defaultData.dosAndDonts));
     if (!this.data.notes) this.data.notes = JSON.parse(JSON.stringify(defaultData.notes));
     if (!this.data.savingsGoals || this.data.savingsGoals.length <= 3) {
       this.data.savingsGoals = JSON.parse(JSON.stringify(defaultData.savingsGoals));
     } else {
-      // Migrate existing goals if missing owner
       this.data.savingsGoals.forEach(g => {
         if (!g.owner) g.owner = 'bareng';
       });
@@ -213,9 +205,6 @@ class StateManager {
     if (!this.data.months[this.data.currentMonth]) {
       this.initMonth(this.data.currentMonth);
     }
-
-    // Attempt Server Sync init
-    this.initServerSync();
   }
 
   onChange(callback) {
@@ -248,92 +237,12 @@ class StateManager {
     }
   }
 
-  async initServerSync() {
-    try {
-      const res = await fetch('/api/data');
-      if (res.ok) {
-        const json = await res.json();
-        this.serverSyncEnabled = true;
-        this.updateSyncBadge('online');
-
-        if (json.initialized && json.data) {
-          // If server already has database, adopt it
-          this.data = json.data;
-          this.saveLocal();
-          this.notifyChange();
-        } else {
-          // Push current data to initialize server DB
-          await this.syncToServer();
-        }
-
-        // Start background polling every 5 seconds so Phone & Laptop sync seamlessly
-        setInterval(() => this.pollServer(), 5000);
-      } else {
-        this.updateSyncBadge('offline');
-      }
-    } catch (e) {
-      this.serverSyncEnabled = false;
-      this.updateSyncBadge('offline');
-    }
-  }
-
-  async syncToServer() {
-    if (!this.serverSyncEnabled || this.isSyncing) return;
-    this.isSyncing = true;
-    try {
-      await fetch('/api/data', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.data)
-      });
-      this.updateSyncBadge('online');
-    } catch (e) {
-      console.warn('Sync to server failed', e);
-      this.updateSyncBadge('offline');
-    } finally {
-      this.isSyncing = false;
-    }
-  }
-
-  async pollServer() {
-    if (!this.serverSyncEnabled || this.isSyncing) return;
-    try {
-      const res = await fetch('/api/data');
-      if (res.ok) {
-        const json = await res.json();
-        if (json.initialized && json.data) {
-          const incoming = JSON.stringify(json.data);
-          const current = JSON.stringify(this.data);
-          if (incoming !== current) {
-            this.data = json.data;
-            this.saveLocal();
-            this.notifyChange();
-          }
-        }
-        this.updateSyncBadge('online');
-      }
-    } catch (e) {
-      this.updateSyncBadge('offline');
-    }
-  }
-
-  updateSyncBadge(status) {
-    const badge = document.getElementById('sync-status-indicator');
-    if (!badge) return;
-    if (status === 'online') {
-      badge.innerHTML = '🟢 <span>Laptop & HP Tersinkron</span>';
-      badge.title = 'Terhubung ke server. Data otomatis sinkron antara laptop dan HP.';
-      badge.className = 'sync-badge sync-online';
-    } else {
-      badge.innerHTML = '📡 <span>Mode Offline</span>';
-      badge.title = 'Data disimpan secara lokal di browser ini.';
-      badge.className = 'sync-badge sync-offline';
-    }
-  }
-
-  save() {
+  // Save and broadcast immediately across all devices with zero delay!
+  save(actionMessage = 'mengupdate data') {
     this.saveLocal();
-    this.syncToServer();
+    if (window.realtimeSync) {
+      window.realtimeSync.broadcastChange(actionMessage);
+    }
     this.notifyChange();
   }
 
@@ -361,7 +270,7 @@ class StateManager {
           { id: 'hb-6', name: '💰 Catat Pengeluaran Harian', assignee: 'bareng', checks: {} }
         ]
       };
-      this.save();
+      this.saveLocal();
     }
   }
 
@@ -374,7 +283,7 @@ class StateManager {
     if (!this.data.months[monthKey]) {
       this.initMonth(monthKey);
     }
-    this.save();
+    this.save('mengganti periode bulan');
   }
 
   getMonthData(monthKey = this.data.currentMonth) {
@@ -436,14 +345,14 @@ class StateManager {
     item.id = 'inc-' + Date.now();
     item.amount = Number(item.amount) || 0;
     month.incomes.unshift(item);
-    this.save();
+    this.save(`menambahkan rezeki ${formatRupiah(item.amount)} (${item.source}) 💵`);
     return item;
   }
 
   deleteIncome(id) {
     const month = this.getMonthData();
     month.incomes = month.incomes.filter(i => i.id !== id);
-    this.save();
+    this.save('menghapus catatan rezeki 🗑️');
   }
 
   addExpense(item) {
@@ -451,17 +360,17 @@ class StateManager {
     item.id = 'exp-' + Date.now();
     item.amount = Number(item.amount) || 0;
     month.expenses.unshift(item);
-    this.save();
+    this.save(`mencatat belanja ${formatRupiah(item.amount)} (${item.title}) 🛍️`);
     return item;
   }
 
   deleteExpense(id) {
     const month = this.getMonthData();
     month.expenses = month.expenses.filter(i => i.id !== id);
-    this.save();
+    this.save('menghapus catatan belanja 🗑️');
   }
 
-  // --- TABUNGAN PER ORANG & BERSAMA ---
+  // Tabungan Per Orang & Bersama
   getSavingsGoals(ownerFilter = 'all') {
     const all = this.data.savingsGoals || [];
     if (ownerFilter === 'all') return all;
@@ -502,7 +411,7 @@ class StateManager {
     goal.target = Number(goal.target) || 0;
     goal.collected = Number(goal.collected) || 0;
     this.data.savingsGoals.push(goal);
-    this.save();
+    this.save(`menambahkan celengan impian baru: "${goal.title}" 🍯`);
     return goal;
   }
 
@@ -510,13 +419,13 @@ class StateManager {
     const goal = this.data.savingsGoals.find(g => g.id === id);
     if (goal) {
       goal.collected = Math.max(0, (goal.collected || 0) + Number(collectedDelta));
-      this.save();
+      this.save(`menabung ${formatRupiah(collectedDelta)} ke celengan "${goal.title}"! 🍯✨`);
     }
   }
 
   deleteSavingsGoal(id) {
     this.data.savingsGoals = this.data.savingsGoals.filter(g => g.id !== id);
-    this.save();
+    this.save('menghapus celengan impian 🗑️');
   }
 
   // Schedules
@@ -529,14 +438,14 @@ class StateManager {
     sch.id = 'sch-' + Date.now();
     month.schedules.push(sch);
     month.schedules.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
-    this.save();
+    this.save(`menambahkan jadwal agenda: "${sch.title}" 📅`);
     return sch;
   }
 
   deleteSchedule(id) {
     const month = this.getMonthData();
     month.schedules = month.schedules.filter(s => s.id !== id);
-    this.save();
+    this.save('menghapus agenda jadwal 🗑️');
   }
 
   // Todos
@@ -549,7 +458,7 @@ class StateManager {
     todo.id = 'td-' + Date.now();
     todo.status = todo.status || 'todo';
     month.todos.unshift(todo);
-    this.save();
+    this.save(`menambahkan misi baru: "${todo.title}" 🐰`);
     return todo;
   }
 
@@ -558,7 +467,8 @@ class StateManager {
     const todo = month.todos.find(t => t.id === id);
     if (todo) {
       todo.status = todo.status === 'done' ? 'todo' : 'done';
-      this.save();
+      const statusText = todo.status === 'done' ? 'menyelesaikan misi' : 'membuka kembali misi';
+      this.save(`${statusText}: "${todo.title}" 🎉`);
       return todo;
     }
     return null;
@@ -567,7 +477,7 @@ class StateManager {
   deleteTodo(id) {
     const month = this.getMonthData();
     month.todos = month.todos.filter(t => t.id !== id);
-    this.save();
+    this.save('menghapus misi to-do 🗑️');
   }
 
   // Do's and Don'ts
@@ -588,14 +498,14 @@ class StateManager {
       date: new Date().toISOString().split('T')[0]
     };
     dnd.dos.unshift(item);
-    this.save();
+    this.save('menambahkan resep bahagia (DO\'s) baru! 🎀');
     return item;
   }
 
   deleteDo(id) {
     const dnd = this.getDosAndDonts();
     dnd.dos = dnd.dos.filter(d => d.id !== id);
-    this.save();
+    this.save('menghapus resep bahagia 🗑️');
   }
 
   addDont(text, category = 'Umum', addedBy = 'bareng') {
@@ -608,14 +518,14 @@ class StateManager {
       date: new Date().toISOString().split('T')[0]
     };
     dnd.donts.unshift(item);
-    this.save();
+    this.save('menambahkan pantangan (DON\'Ts) baru! 🚫');
     return item;
   }
 
   deleteDont(id) {
     const dnd = this.getDosAndDonts();
     dnd.donts = dnd.donts.filter(d => d.id !== id);
-    this.save();
+    this.save('menghapus pantangan 🗑️');
   }
 
   // Shared Notes
@@ -639,13 +549,13 @@ class StateManager {
       updatedAt: new Date().toISOString().split('T')[0]
     };
     notes.unshift(item);
-    this.save();
+    this.save(`menempelkan memo baru: "${title}" 💌`);
     return item;
   }
 
   deleteNote(id) {
     this.data.notes = this.getNotes().filter(n => n.id !== id);
-    this.save();
+    this.save('menghapus memo 🗑️');
   }
 
   togglePinNote(id) {
@@ -653,7 +563,7 @@ class StateManager {
     if (note) {
       note.pinned = !note.pinned;
       this.data.notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
-      this.save();
+      this.save('mengubah pin memo 📌');
     }
   }
 
@@ -665,7 +575,7 @@ class StateManager {
   updateReview(reviewData) {
     const month = this.getMonthData();
     month.review = { ...month.review, ...reviewData };
-    this.save();
+    this.save('mengupdate refleksi & surat cinta bulanan! 💖');
   }
 
   // Habits
@@ -679,7 +589,8 @@ class StateManager {
     if (habit) {
       if (!habit.checks) habit.checks = {};
       habit.checks[dayNumber] = !habit.checks[dayNumber];
-      this.save();
+      const statusText = habit.checks[dayNumber] ? 'mencentang' : 'membatalkan';
+      this.save(`${statusText} kebiasaan "${habit.name}" tgl ${dayNumber} ✨`);
       return habit.checks[dayNumber];
     }
     return false;
@@ -690,14 +601,14 @@ class StateManager {
     habit.id = 'hb-' + Date.now();
     habit.checks = {};
     month.habits.push(habit);
-    this.save();
+    this.save(`menambahkan kebiasaan sehat baru: "${habit.name}" 🌷`);
     return habit;
   }
 
   deleteHabit(habitId) {
     const month = this.getMonthData();
     month.habits = month.habits.filter(h => h.id !== habitId);
-    this.save();
+    this.save('menghapus kebiasaan 🗑️');
   }
 
   // Export / Import
@@ -710,7 +621,7 @@ class StateManager {
       const parsed = JSON.parse(jsonString);
       if (parsed.profiles && parsed.months) {
         this.data = parsed;
-        this.save();
+        this.save('mengimpor data cadangan');
         return true;
       }
     } catch (e) {
@@ -721,7 +632,7 @@ class StateManager {
 
   resetToDefault() {
     this.data = JSON.parse(JSON.stringify(defaultData));
-    this.save();
+    this.save('mereset data ke contoh awal bawaan');
   }
 }
 

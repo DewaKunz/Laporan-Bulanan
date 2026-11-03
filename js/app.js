@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
       toast.remove();
     }, 3800);
   }
+  window.showToast = showToast;
 
   // 5. Render Overview Tab
   function renderOverview() {
@@ -858,10 +859,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 11. Modal Management
+  // 11. Modal Management & User Auto-Fill
+  function autoFillActiveUser(container = document) {
+    const currentUserId = window.authManager ? window.authManager.getCurrentUserId() : null;
+    if (!currentUserId) return;
+
+    const fields = [
+      'inc-person',
+      'exp-paidBy',
+      'sch-person',
+      'td-assignee',
+      'goal-owner',
+      'do-addedBy',
+      'dont-addedBy',
+      'nt-author',
+      'hb-assignee'
+    ];
+
+    fields.forEach(id => {
+      const el = container.querySelector ? container.querySelector(`#${id}`) : document.getElementById(id);
+      if (el && el.tagName === 'SELECT') {
+        const opt = el.querySelector(`option[value="${currentUserId}"]`);
+        if (opt) {
+          el.value = currentUserId;
+        }
+      }
+    });
+  }
+
   function openModal(id) {
     const modal = document.getElementById(id);
-    if (modal) modal.classList.add('active');
+    if (modal) {
+      modal.classList.add('active');
+      autoFillActiveUser(modal);
+    }
   }
 
   function closeModal(id) {
@@ -1145,9 +1176,120 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAll();
   });
 
+  // 15. Authentication & Profile Management (Dewa 🐻 & Ayu 🐰)
+  let selectedLoginUser = 'dewa';
+
+  function updateAuthHeaderUI() {
+    const avatarEl = document.getElementById('user-pill-avatar');
+    const nameEl = document.getElementById('user-pill-name');
+    const closeBtn = document.getElementById('login-modal-close');
+    const switchFooter = document.getElementById('login-switch-footer');
+
+    if (!window.authManager || !window.authManager.isLoggedIn()) {
+      if (avatarEl) avatarEl.textContent = '👤';
+      if (nameEl) nameEl.textContent = 'Pilih Akun';
+      if (closeBtn) closeBtn.style.display = 'none';
+      if (switchFooter) switchFooter.style.display = 'none';
+      document.body.removeAttribute('data-current-user');
+      return;
+    }
+
+    const profile = window.authManager.getCurrentUserProfile();
+    if (avatarEl) avatarEl.textContent = profile.avatar;
+    if (nameEl) nameEl.textContent = profile.title;
+    if (closeBtn) closeBtn.style.display = 'flex';
+    if (switchFooter) switchFooter.style.display = 'block';
+    document.body.setAttribute('data-current-user', profile.id);
+
+    // Update greeting banner
+    if (loveBannerText) {
+      loveBannerText.innerHTML = `<span>${profile.avatar}</span> <span>${profile.greeting}</span> <span>✨</span>`;
+    }
+  }
+
+  function selectLoginCard(userId) {
+    selectedLoginUser = userId;
+    const cardDewa = document.getElementById('card-select-dewa');
+    const cardAyu = document.getElementById('card-select-ayu');
+    if (cardDewa) cardDewa.classList.toggle('active', userId === 'dewa');
+    if (cardAyu) cardAyu.classList.toggle('active', userId === 'ayu');
+    const pinInput = document.getElementById('login-pin-input');
+    if (pinInput) {
+      pinInput.value = '1234';
+      pinInput.focus();
+    }
+    const errorMsg = document.getElementById('login-error-msg');
+    if (errorMsg) errorMsg.style.display = 'none';
+  }
+
+  function initAuthUI() {
+    const cardDewa = document.getElementById('card-select-dewa');
+    const cardAyu = document.getElementById('card-select-ayu');
+    const formLogin = document.getElementById('form-login');
+    const btnLogout = document.getElementById('btn-logout-current');
+    const userHeaderProfile = document.getElementById('user-header-profile');
+
+    if (cardDewa) {
+      cardDewa.addEventListener('click', () => selectLoginCard('dewa'));
+    }
+    if (cardAyu) {
+      cardAyu.addEventListener('click', () => selectLoginCard('ayu'));
+    }
+
+    if (userHeaderProfile) {
+      userHeaderProfile.addEventListener('click', () => {
+        const current = (window.authManager && window.authManager.getCurrentUserId()) || 'dewa';
+        selectLoginCard(current);
+        openModal('modal-login');
+      });
+    }
+
+    if (formLogin) {
+      formLogin.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const pin = document.getElementById('login-pin-input').value.trim();
+        const res = window.authManager.login(selectedLoginUser, pin);
+        if (res.success) {
+          closeModal('modal-login');
+          updateAuthHeaderUI();
+          autoFillActiveUser();
+          showToast(`Berhasil masuk sebagai ${res.user.title}! 🌸`, '💖');
+          if (window.realtimeSync) {
+            window.realtimeSync.initPeerJS();
+          }
+        } else {
+          const errEl = document.getElementById('login-error-msg');
+          if (errEl) {
+            errEl.textContent = res.message || 'PIN salah, coba lagi ya~';
+            errEl.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', () => {
+        window.authManager.logout();
+        updateAuthHeaderUI();
+        selectLoginCard('dewa');
+        showToast('Berhasil keluar akun. Silakan pilih profil baru~', '👋');
+      });
+    }
+
+    // Check login state on initial load
+    if (window.authManager && window.authManager.isLoggedIn()) {
+      updateAuthHeaderUI();
+      selectLoginCard(window.authManager.getCurrentUserId());
+    } else {
+      selectLoginCard('dewa');
+      openModal('modal-login');
+    }
+  }
+
   // Initial Boot
   initMonthSelector();
   initTheme();
+  initAuthUI();
   initCalendar();
   renderAll();
 });

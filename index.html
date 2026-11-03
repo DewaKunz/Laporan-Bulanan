@@ -24,6 +24,12 @@
       </div>
 
       <div class="header-actions">
+        <!-- User Account Pill & Switcher (Dewa 🐻 / Ayu 🐰) -->
+        <button id="user-header-profile" class="user-account-pill" title="Profil akun aktif - Klik untuk ganti profil">
+          <span id="user-pill-avatar" style="font-size: 1.15rem;">👤</span>
+          <span id="user-pill-name">Pilih Akun</span>
+        </button>
+
         <!-- Sync Status Indicator (Laptop & HP Live Sync) -->
         <div id="sync-status-indicator" class="sync-badge sync-offline" title="Memeriksa sinkronisasi...">
           📡 <span>Mode Offline</span>
@@ -646,6 +652,58 @@
     </div>
   </div>
 
+  <!-- Modal: Login / Akun Dewa & Ayu -->
+  <div id="modal-login" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 450px;">
+      <form id="form-login">
+        <div class="modal-header">
+          <h3 style="font-weight: 800; font-size: 1.15rem;">🌸 Masuk Akun Sweet Space</h3>
+          <button type="button" class="btn-icon modal-close-btn" id="login-modal-close" style="display: none;">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem; text-align: center;">
+            Pilih profilmu agar input keuangan, jadwal kencan, dan misi to-do otomatis atas nama kamu ya sayang~ 💕
+          </p>
+
+          <div class="login-profile-grid">
+            <div class="login-profile-card login-card-dewa" id="card-select-dewa" data-user="dewa">
+              <div class="login-avatar-circle" style="background: #e0f2fe;">🐻</div>
+              <div style="font-weight: 800; font-size: 1.1rem; color: #0284c7;">Mas Dewa</div>
+              <div style="font-size: 0.775rem; color: var(--text-muted);">Si Ganteng 💙</div>
+            </div>
+
+            <div class="login-profile-card login-card-ayu" id="card-select-ayu" data-user="ayu">
+              <div class="login-avatar-circle" style="background: #ffe4e9;">🐰</div>
+              <div style="font-weight: 800; font-size: 1.1rem; color: #f43f5e;">Neng Ayu</div>
+              <div style="font-size: 0.775rem; color: var(--text-muted);">Si Cantik 💖</div>
+            </div>
+          </div>
+
+          <div id="login-pin-section" style="margin-top: 1rem;">
+            <label class="form-label" for="login-pin-input" style="text-align: center; display: block;">
+              PIN Keamanan Profil 🔒
+            </label>
+            <input type="password" id="login-pin-input" class="form-control" placeholder="••••" maxlength="6" inputmode="numeric" style="text-align: center; font-size: 1.35rem; letter-spacing: 0.4rem; font-weight: 800;" value="1234" required>
+            <div id="login-error-msg" style="color: #f43f5e; font-size: 0.8rem; margin-top: 0.5rem; text-align: center; display: none; font-weight: 700;"></div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+              PIN bawaan: <code>1234</code>. Akun tersimpan otomatis di perangkat ini! ✨
+            </p>
+          </div>
+        </div>
+        <div class="modal-footer" style="flex-direction: column; gap: 0.65rem;">
+          <button type="submit" class="btn btn-primary" id="btn-login-submit" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.8rem;">
+            Masuk Sekarang 💕
+          </button>
+          <div id="login-switch-footer" style="display: none; width: 100%; text-align: center;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-logout-current" style="width: 100%;">
+              🚪 Keluar / Ganti Akun Lain
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal: Quick Action (Mobile) -->
   <div id="modal-quick-action" class="modal-backdrop">
     <div class="modal-content" style="max-width: 400px;">
@@ -1107,6 +1165,9 @@
   <div id="toast-container" class="toast-container"></div>
 
   <!-- Scripts -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/realtime.js"></script>
   <script src="js/state.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/calendar.js"></script>
